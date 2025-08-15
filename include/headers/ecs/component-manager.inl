@@ -25,7 +25,8 @@ template <typename T>
 void ComponentManager::addComponent(EntityID entity, T component)
 {
     getComponentArray<T>()->addComponent(entity, component);
-    Game::Get()->getEntityManager()->getComponentBitset(entity)[getComponentTypeID<T>()] = 1;
+    Game::get()->getEntityManager()->getComponentBitset(entity)[getComponentTypeID<T>()] = 1;
+    Game::get()->getSystemManager()->entityUpdated(entity);
 }
 
 template <typename T>

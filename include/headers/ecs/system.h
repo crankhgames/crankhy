@@ -4,7 +4,7 @@
 
 class System
 {
-private:
+protected:
     std::set<EntityID> entities;
 
 public:

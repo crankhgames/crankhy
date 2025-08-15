@@ -5,21 +5,6 @@
 
 #include <iostream>
 
-struct Transform
-{
-    float x, y;
-};
-
-struct Velocity
-{
-    float vX, vY;
-};
-
-struct Renderer
-{
-    const char *textureName;
-};
-
 class IComponentArray
 {
 public:
