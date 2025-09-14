@@ -1,5 +1,5 @@
-#include "managers/texture-manager.h"
-#include "SDL_image.h"
+#include "graphics/texture-manager.h"
+#include "SDL2/SDL_image.h"
 #include "debug.h"
 #include "game.h"
 
@@ -12,7 +12,7 @@ SDL_Texture *loadTexture(const char *filename)
         return nullptr;
     }
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::get()->getRenderer(), tempSurface);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::get().getWindow().renderer, tempSurface);
     SDL_FreeSurface(tempSurface);
 
     if (!texture)
@@ -26,7 +26,7 @@ SDL_Texture *loadTexture(const char *filename)
 
 void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest)
 {
-    if (SDL_RenderCopy(Game::get()->getRenderer(), texture, &src, &dest) != 0)
+    if (SDL_RenderCopy(Game::get().getWindow().renderer, texture, &src, &dest) != 0)
     {
         debug::error("Failed to render texture: ", SDL_GetError());
     }

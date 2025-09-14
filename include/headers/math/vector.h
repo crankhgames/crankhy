@@ -5,6 +5,8 @@ struct Vector
 
     float x, y;
 
+    void set(float x, float y);
+
     float length();
     Vector normal();
     void normalize();
@@ -12,6 +14,7 @@ struct Vector
     float distance(const Vector &v);
     float distanceSquared(const Vector &v);
     float dot(const Vector &v);
+    float cross(const Vector &v);
 
     inline Vector operator+(const Vector &v)
     {
@@ -34,20 +37,24 @@ struct Vector
     {
         x += v.x;
         y += v.y;
+        return *this;
     }
     inline Vector &operator-=(const Vector &v)
     {
         x -= v.x;
         y -= v.y;
+        return *this;
     }
     inline Vector &operator*=(const float scalar)
     {
         x *= scalar;
         y *= scalar;
+        return *this;
     }
     inline Vector &operator/=(const float scalar)
     {
         x /= scalar;
         y /= scalar;
+        return *this;
     }
 };

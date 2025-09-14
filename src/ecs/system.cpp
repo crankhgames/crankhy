@@ -7,8 +7,10 @@ void System::addEntity(EntityID entity)
 
 void System::removeEntity(EntityID entity)
 {
-    if (entities.find(entity) != entities.end())
-    {
-        entities.erase(entity);
-    }
+    entities.erase(entity);
+}
+
+bool System::hasEntity(EntityID entity)
+{
+    return entities.find(entity) != entities.end();
 }

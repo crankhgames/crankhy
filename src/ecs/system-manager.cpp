@@ -1,10 +1,11 @@
 #include "ecs/system-manager.h"
 #include "game.h"
+#include "debug.h"
 
-void SystemManager::registerSystem(std::shared_ptr<System> system, ComponentBitset systemBitset)
+void SystemManager::registerSystem(std::shared_ptr<System> system)
 {
+    debug::log("System  pushed with others systems");
     systems.push_back(system);
-    systemBitsets.push_back(systemBitset);
 }
 
 void SystemManager::tick(int deltaTime)
@@ -17,19 +18,15 @@ void SystemManager::tick(int deltaTime)
 
 void SystemManager::entityUpdated(EntityID entity)
 {
-    ComponentBitset bitset = Game::get()->getEntityManager()->getBitset(entity);
+    ComponentBitset bitset = Game::get().getECSManager().getBitset(entity);
     for (int i = 0; i < systems.size(); i++)
     {
-        ComponentBitset systemBitset = systemBitsets[i];
         System *system = systems[i].get();
+        ComponentBitset systemBitset = system->getBitset();
 
-        if ((bitset & systemBitset) == systemBitset)
+        if ((bitset & systemBitset) == systemBitset && !system->hasEntity(entity))
         {
             system->addEntity(entity);
-        }
-        else
-        {
-            system->removeEntity(entity);
         }
     }
 }
@@ -38,6 +35,9 @@ void SystemManager::entityDestroyed(EntityID entity)
 {
     for (auto system : systems)
     {
-        system->removeEntity(entity);
+        if (system->hasEntity(entity))
+        {
+            system->removeEntity(entity);
+        }
     }
 }

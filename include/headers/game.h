@@ -1,8 +1,8 @@
 #pragma once
 #include "SDL2/SDL.h"
-#include "ecs/entity-manager.h"
-#include "ecs/component-manager.h"
-#include "ecs/system-manager.h"
+#include "ecs/ecs-manager.h"
+#include "window.h"
+#include "debug.h"
 
 enum class GameState
 {
@@ -13,16 +13,16 @@ enum class GameState
 class Game
 {
 private:
-    SDL_Renderer *renderer;
-    SDL_Window *window;
+    std::unique_ptr<Window> window;
+    std::unique_ptr<ECSManager> ecsManager;
 
-    EntityManager *entityManager;
-    ComponentManager *componentManager;
-    SystemManager *systemManager;
-
-    void init(const char *title, int width, int height, bool isfullscreen);
+    void init();
     void loop();
     void handleEvent();
+
+    void registerComponents();
+    void registerSystems();
+    void initializeEntities();
 
     static Game *Instance;
 
@@ -30,14 +30,20 @@ private:
 
 public:
     Game();
-    ~Game();
+    ~Game() = default;
     void run();
 
-    static Game *get() { return Instance; }
+    static Game &get()
+    {
+        return *Instance;
+    }
 
-    SDL_Renderer *getRenderer() { return renderer; }
-    SDL_Window *getWindow() { return window; }
-    EntityManager *getEntityManager() { return entityManager; }
-    ComponentManager *getComponentManager() { return componentManager; }
-    SystemManager *getSystemManager() { return systemManager; }
+    Window &getWindow()
+    {
+        return *window.get();
+    }
+    ECSManager &getECSManager()
+    {
+        return *ecsManager.get();
+    }
 };

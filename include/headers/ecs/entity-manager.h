@@ -14,10 +14,18 @@ private:
 
     std::queue<EntityID> deletedEntities;
 
-    EntityID newEntityID;
+    std::queue<EntityID> availableEntities;
 
 public:
+    /**
+     * @brief ID for inexistant entities
+     */
     EntityID nullEntity = -1;
+
+    /**
+     * @brief Creates an instance of EntityManager and generates avaiable entities
+     */
+    EntityManager();
 
     /**
      * @brief Adds new entity id to pool of existing entity
@@ -50,12 +58,22 @@ public:
      */
     int getEntityCount();
 
-    void handleDestroyedEntities();
-
     /**
      * @brief Gets component bitset of entity
      * @param entity entity's id
      * @return component bitset
      */
-    ComponentBitset getBitset(EntityID entity);
+    ComponentBitset &getBitset(EntityID entity);
+
+    /**
+     * @brief Checks if system includes this entity
+     * @param entity entity's id
+     * @param sysBitset system bitset
+     */
+    bool doesSystemBitContain(EntityID entity, ComponentBitset sysBitset);
+
+    /**
+     * @brief Deletes each "deleted" entity one by one by destroying every component it owns
+     */
+    void handleDestroyedEntities();
 };

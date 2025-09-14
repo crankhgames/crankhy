@@ -23,7 +23,11 @@ private:
      * @return shared pointer pointing to the address of the component array
      */
     template <typename T>
-    std::shared_ptr<ComponentArray<T>> getComponentArray();
+    std::shared_ptr<ComponentArray<T>> getComponentArray()
+    {
+        ComponentTypeID typeId = getComponentTypeID<T>();
+        return std::static_pointer_cast<ComponentArray<T>>(componentArrays[typeId]);
+    }
 
 public:
     /**
@@ -32,7 +36,10 @@ public:
      * @return ComponentType (const char *) type of component
      */
     template <typename T>
-    ComponentType getComponentType();
+    ComponentType getComponentType()
+    {
+        return static_cast<ComponentType>(typeid(T).name());
+    }
 
     /**
      * @brief Get Component Type ID based on type of component T
@@ -40,7 +47,10 @@ public:
      * @return ComponentTypeID (size_t) type of component
      */
     template <typename T>
-    ComponentTypeID getComponentTypeID();
+    ComponentTypeID getComponentTypeID()
+    {
+        return componentTypeName2ID[getComponentType<T>()];
+    }
 
     /**
      * @brief Get the number of types registered in the component manager
@@ -49,20 +59,16 @@ public:
     ComponentTypeID getComponentTypeCount();
 
     /**
-     * @brief Adds component type to bitset
-     * @param bitset reference to bitset
-     */
-    template <typename T>
-    void addComponentTypeToBitset(ComponentBitset &bitset);
-
-    /**
      * @brief Adds a new component to an entity based on it's id
      * @tparam T component type
      * @param entity entity's id
      * @param component component of type T
      */
     template <typename T>
-    void addComponent(EntityID entity, T component);
+    void addComponent(EntityID entity, T component)
+    {
+        getComponentArray<T>()->addComponent(entity, component);
+    }
 
     /**
      * @brief Gets the component of an entity based on the component and entity's id
@@ -71,15 +77,10 @@ public:
      * @return component owned by entity
      */
     template <typename T>
-    T &getComponent(EntityID entity);
-
-    /**
-     * @brief Destroys/Remove/Delete component of an entity based on it's id
-     * @tparam T component type
-     * @param entity entity's id
-     */
-    template <typename T>
-    void destroyComponent(EntityID entity);
+    T &getComponent(EntityID entity)
+    {
+        return getComponentArray<T>()->getComponent(entity);
+    }
 
     void entityDestroyed(EntityID entity);
 
@@ -88,12 +89,14 @@ public:
      * @tparam T component type
      */
     template <typename T>
-    void registerComponent();
+    void registerComponent()
+    {
+        componentTypeName2ID[getComponentType<T>()] = getComponentTypeCount();
+        componentArrays.push_back(std::make_shared<ComponentArray<T>>());
+    }
 
     /**
      * @brief Prints out to the console information about the component manager (component types)
      */
     void print();
 };
-
-#include "ecs/component-manager.inl"

@@ -1,5 +1,11 @@
-#include "utils/vector.h"
+#include "math/vector.h"
 #include <cmath>
+
+void Vector::set(float x, float y)
+{
+    this->x = x;
+    this->y = y;
+}
 
 float Vector::length()
 {
@@ -25,4 +31,9 @@ float Vector::distance(const Vector &v)
 float Vector::dot(const Vector &v)
 {
     return x * v.x + y * v.y;
+}
+
+float Vector::cross(const Vector &v)
+{
+    return x * v.y - y * v.x;
 }

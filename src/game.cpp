@@ -1,35 +1,28 @@
 #include "game.h"
-#include "ecs/component-manager.h"
 #include "ecs/ecs.h"
-#include <iostream>
+#include "ecs/system.h"
+#include "ecs/ecs-manager.h"
+#include "components.h"
+#include "systems.h"
 
+#include "debug.h"
+#include <iostream>
+#include <memory>
+
+Game *Game::Instance = nullptr;
 Game::Game()
 {
-    window = nullptr;
-    renderer = nullptr;
-
-    if (Instance != nullptr)
+    if (Instance == nullptr)
     {
         Instance = this;
     }
-
-    entityManager = new EntityManager();
-    componentManager = new ComponentManager();
-    systemManager = new SystemManager();
-}
-
-Game::~Game()
-{
-    delete entityManager;
-    delete componentManager;
-    delete systemManager;
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    window = std::make_unique<Window>();
+    ecsManager = std::make_unique<ECSManager>();
 }
 
 void Game::run()
 {
-    init("Error Demo", 800, 600, false);
+    init();
 
     while (gameState != GameState::EXIT)
     {
@@ -37,30 +30,20 @@ void Game::run()
     }
 }
 
-void Game::init(const char *title, int width, int height, bool isFullscreen)
+void Game::init()
 {
 
     SDL_Init(SDL_INIT_EVERYTHING);
+    srand(std::time(NULL));
 
-    int fullscreenFlags = SDL_WINDOW_SHOWN;
-    if (isFullscreen)
-    {
-        fullscreenFlags = SDL_WINDOW_FULLSCREEN;
-    }
-
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullscreenFlags);
-    if (!window)
-    {
-        std::cout << "Window not initialized..." << std::endl;
-        return;
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!renderer)
-    {
-        std::cout << "Renderer not initialized..." << std::endl;
-        return;
-    }
+    window->init();
+    debug::log("Window initialized !");
+    registerComponents();
+    debug::log("Components registered !");
+    registerSystems();
+    debug::log("Systems registered !");
+    initializeEntities();
+    debug::log("Entities intialized !");
 
     gameState = GameState::PLAY;
 }
@@ -79,7 +62,44 @@ void Game::handleEvent()
 void Game::loop()
 {
     handleEvent();
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    window->clearRender();
+
+    // Main logic
+    ecsManager->tick(0.1);
+
+    window->presentRender();
+}
+
+void Game::registerComponents()
+{
+    ecsManager->registerComponent<Transform>();
+    ecsManager->registerComponent<TextureRenderer>();
+    ecsManager->registerComponent<Velocity>();
+}
+
+void Game::registerSystems()
+{
+    ecsManager->registerSystem(std::make_shared<RenderSystem>());
+}
+
+void Game::initializeEntities()
+{
+
+    for (int i = 0; i < 50; i++)
+    {
+        EntityID player = ecsManager->createEntity();
+
+        // Creates Transform component
+        Transform playerTransform;
+        int x = (float)rand() / RAND_MAX * 800;
+        int y = (float)rand() / RAND_MAX * 600;
+        playerTransform.position.set(x, y);
+        playerTransform.scale.set(50, 50);
+        ecsManager->addComponent<Transform>(player, playerTransform);
+
+        // Creates TextureRenderer component
+        TextureRenderer playerRenderer;
+        playerRenderer.texture = loadTexture("assets/sprites/player-sprite.png");
+        ecsManager->addComponent<TextureRenderer>(player, playerRenderer);
+    }
 }

@@ -1,18 +1,19 @@
 #pragma once
-#include "SDL.h"
+#include "SDL2/SDL.h"
+#include "math/vector.h"
 
 struct Transform
 {
-    int x, y;
-    int scaleX, scaleY;
+    Vector position;
+    Vector scale;
 };
 
-struct Renderer
+struct TextureRenderer
 {
     SDL_Texture *texture;
 };
 
 struct Velocity
 {
-    int velX, velY;
+    Vector velocity;
 };
