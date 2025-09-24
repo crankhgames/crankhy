@@ -17,3 +17,11 @@ struct Velocity
 {
     Vector velocity;
 };
+
+struct MoveOnInput
+{
+    SDL_Scancode up;
+    SDL_Scancode down;
+    SDL_Scancode left;
+    SDL_Scancode right;
+};

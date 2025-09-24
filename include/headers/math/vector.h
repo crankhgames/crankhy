@@ -8,6 +8,7 @@ struct Vector
     void set(float x, float y);
 
     float length();
+    float lengthSquared();
     Vector normal();
     void normalize();
 

@@ -2,6 +2,8 @@
 #include "ecs/ecs.h"
 #include "ecs/system.h"
 #include "ecs/ecs-manager.h"
+#include "input/input-manager.h"
+
 #include "components.h"
 #include "systems.h"
 
@@ -54,8 +56,19 @@ void Game::handleEvent()
     SDL_PollEvent(&event);
     switch (event.type)
     {
+    case SDL_MOUSEBUTTONDOWN:
+        break;
+    case SDL_MOUSEBUTTONUP:
+        break;
+    case SDL_KEYDOWN:
+        inputManager.setPressed(event.key.keysym.scancode);
+        break;
+    case SDL_KEYUP:
+        inputManager.setReleased(event.key.keysym.scancode);
+        break;
     case SDL_QUIT:
         gameState = GameState::EXIT;
+        break;
     }
 }
 
@@ -65,7 +78,7 @@ void Game::loop()
     window->clearRender();
 
     // Main logic
-    ecsManager->tick(0.1);
+    ecsManager->tick(0.005);
 
     window->presentRender();
 }
@@ -75,31 +88,37 @@ void Game::registerComponents()
     ecsManager->registerComponent<Transform>();
     ecsManager->registerComponent<TextureRenderer>();
     ecsManager->registerComponent<Velocity>();
+    ecsManager->registerComponent<MoveOnInput>();
 }
 
 void Game::registerSystems()
 {
-    ecsManager->registerSystem(std::make_shared<RenderSystem>());
+    ecsManager->registerSystem<MoveOnInputSystem>();
+    ecsManager->registerSystem<VelocitySystem>();
+    ecsManager->registerSystem<RenderSystem>();
 }
 
 void Game::initializeEntities()
 {
+    EntityID player = ecsManager->createEntity();
 
-    for (int i = 0; i < 50; i++)
-    {
-        EntityID player = ecsManager->createEntity();
+    Transform pTransform;
+    pTransform.position.set(400, 300);
+    pTransform.scale.set(50, 50);
+    ecsManager->addComponent<Transform>(player, pTransform);
 
-        // Creates Transform component
-        Transform playerTransform;
-        int x = (float)rand() / RAND_MAX * 800;
-        int y = (float)rand() / RAND_MAX * 600;
-        playerTransform.position.set(x, y);
-        playerTransform.scale.set(50, 50);
-        ecsManager->addComponent<Transform>(player, playerTransform);
+    TextureRenderer pTexRenderer;
+    pTexRenderer.texture = loadTexture("assets/sprites/player-sprite.png");
+    ecsManager->addComponent<TextureRenderer>(player, pTexRenderer);
 
-        // Creates TextureRenderer component
-        TextureRenderer playerRenderer;
-        playerRenderer.texture = loadTexture("assets/sprites/player-sprite.png");
-        ecsManager->addComponent<TextureRenderer>(player, playerRenderer);
-    }
+    Velocity pVelocity;
+    pVelocity.velocity.set(0, 0);
+    ecsManager->addComponent<Velocity>(player, pVelocity);
+
+    MoveOnInput pMoveOnInput;
+    pMoveOnInput.down = SDL_SCANCODE_S;
+    pMoveOnInput.up = SDL_SCANCODE_W;
+    pMoveOnInput.left = SDL_SCANCODE_A;
+    pMoveOnInput.right = SDL_SCANCODE_D;
+    ecsManager->addComponent<MoveOnInput>(player, pMoveOnInput);
 }

@@ -9,11 +9,21 @@ void Vector::set(float x, float y)
 
 float Vector::length()
 {
-    return sqrt(x * x + y * y);
+    return sqrt(this->lengthSquared());
+}
+
+float Vector::lengthSquared()
+{
+    return x * x + y * y;
 }
 
 Vector Vector::normal()
 {
+    if (lengthSquared() == 0)
+    {
+        return *this;
+    }
+
     return *this / length();
 }
 

@@ -2,9 +2,17 @@
 #include "SDL2/SDL_image.h"
 #include "debug.h"
 #include "game.h"
+#include <unordered_map>
+
+std::unordered_map<const char *, SDL_Texture *> loadedTextures;
 
 SDL_Texture *loadTexture(const char *filename)
 {
+    if (loadedTextures.find(filename) != loadedTextures.end())
+    {
+        return loadedTextures[filename];
+    }
+
     SDL_Surface *tempSurface = IMG_Load(filename);
     if (!tempSurface)
     {
@@ -21,6 +29,7 @@ SDL_Texture *loadTexture(const char *filename)
         return nullptr;
     }
 
+    loadedTextures[filename] = texture;
     return texture;
 }
 

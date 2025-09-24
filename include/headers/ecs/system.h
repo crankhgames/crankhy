@@ -10,7 +10,7 @@ protected:
     ComponentBitset systemBitset;
 
 public:
-    virtual void tick(int deltaTime) = 0;
+    virtual void tick(float deltaTime) = 0;
     void addEntity(EntityID entity);
     bool hasEntity(EntityID entity);
     void removeEntity(EntityID entity);

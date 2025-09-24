@@ -58,12 +58,17 @@ public:
     /**
      * @brief Registers new System
      */
-    void registerSystem(std::shared_ptr<System> system);
+    template <typename T>
+    void registerSystem()
+    {
+        std::shared_ptr<System> sys = std::make_shared<T>();
+        systemManager->registerSystem(sys);
+    }
 
     /**
      * @brief Executes every frame
      */
-    void tick(int deltatime);
+    void tick(float deltatime);
 
     /**
      * @brief Calls ComponentManager and SystemManager to delete any info related to this entity id

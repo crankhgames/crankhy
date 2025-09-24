@@ -8,7 +8,7 @@ void SystemManager::registerSystem(std::shared_ptr<System> system)
     systems.push_back(system);
 }
 
-void SystemManager::tick(int deltaTime)
+void SystemManager::tick(float deltaTime)
 {
     for (auto system : systems)
     {

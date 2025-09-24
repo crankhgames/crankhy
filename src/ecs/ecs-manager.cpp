@@ -11,13 +11,7 @@ void ECSManager::destroyEntity(EntityID entity)
     entityManager->destroyEntity(entity);
 }
 
-void ECSManager::registerSystem(std::shared_ptr<System> system)
-{
-    debug::log("System is registering...");
-    systemManager->registerSystem(system);
-}
-
-void ECSManager::tick(int deltatime)
+void ECSManager::tick(float deltatime)
 {
     systemManager->tick(deltatime);
     entityManager->handleDestroyedEntities();

@@ -26,5 +26,5 @@ public:
     /**
      * Executes the underlying logic of each system at each frame
      */
-    void tick(int deltaTime);
+    void tick(float deltaTime);
 };
