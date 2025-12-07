@@ -1,0 +1,68 @@
+[
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/ecs/component-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/ecs/component-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/ecs/component-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/ecs/component-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/ecs/ecs-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/ecs/ecs-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/ecs/ecs-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/ecs/ecs-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/ecs/entity-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/ecs/entity-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/ecs/entity-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/ecs/entity-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/ecs/system-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/ecs/system-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/ecs/system-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/ecs/system-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/ecs/system.cpp.o -c /home/error_world/Documents/Code/crankhy/src/ecs/system.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/ecs/system.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/ecs/system.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/game.cpp.o -c /home/error_world/Documents/Code/crankhy/src/game.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/game.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/game.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/graphics/texture-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/graphics/texture-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/graphics/texture-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/graphics/texture-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/input/input-manager.cpp.o -c /home/error_world/Documents/Code/crankhy/src/input/input-manager.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/input/input-manager.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/input/input-manager.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/main.cpp.o -c /home/error_world/Documents/Code/crankhy/src/main.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/main.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/math/vector.cpp.o -c /home/error_world/Documents/Code/crankhy/src/math/vector.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/math/vector.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/math/vector.cpp.o"
+},
+{
+  "directory": "/home/error_world/Documents/Code/crankhy/build",
+  "command": "/usr/bin/g++ -I/home/error_world/Documents/Code/crankhy/include -I/home/error_world/Documents/Code/crankhy/tools -isystem /usr/include/SDL2 -g -o CMakeFiles/crankhy.dir/src/window.cpp.o -c /home/error_world/Documents/Code/crankhy/src/window.cpp",
+  "file": "/home/error_world/Documents/Code/crankhy/src/window.cpp",
+  "output": "/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir/src/window.cpp.o"
+}
+]
