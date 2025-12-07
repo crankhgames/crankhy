@@ -1,3 +1,0 @@
-/home/error_world/Documents/Code/crankhy/build/CMakeFiles/crankhy.dir
-/home/error_world/Documents/Code/crankhy/build/CMakeFiles/edit_cache.dir
-/home/error_world/Documents/Code/crankhy/build/CMakeFiles/rebuild_cache.dir
