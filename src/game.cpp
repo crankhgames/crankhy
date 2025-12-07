@@ -121,4 +121,5 @@ void Game::initializeEntities()
     pMoveOnInput.left = SDL_SCANCODE_A;
     pMoveOnInput.right = SDL_SCANCODE_D;
     ecsManager->addComponent<MoveOnInput>(player, pMoveOnInput);
+
 }

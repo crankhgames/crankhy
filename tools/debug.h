@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
 
-namespace debug
-{
+namespace debug{
     template <typename... Args>
     void log(const Args &...args)
     {

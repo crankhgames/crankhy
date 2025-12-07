@@ -1,5 +1,5 @@
 #include "ecs/ecs-manager.h"
-#include "debug.h"
+#include "debug/debug.h"
 
 EntityID ECSManager::createEntity()
 {

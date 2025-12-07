@@ -1,5 +1,5 @@
 #include "input/input-manager.h"
-#include "debug.h"
+#include "debug/debug.h"
 
 void InputManager::setPressed(SDL_Scancode scancode)
 {
