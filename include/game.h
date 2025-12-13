@@ -4,46 +4,49 @@
 #include "window.h"
 #include "debug.h"
 
-enum class GameState
-{
-    PLAY,
-    EXIT
-};
+namespace Crankhy{
 
-class Game
-{
-private:
-    std::unique_ptr<Window> window;
-    std::unique_ptr<ECSManager> ecsManager;
-
-    void init();
-    void loop();
-    void handleEvent();
-
-    void registerComponents();
-    void registerSystems();
-    void initializeEntities();
-
-    static Game *Instance;
-
-    GameState gameState;
-
-public:
-    Game();
-    ~Game() = default;
-    void run();
-
-    static Game &get()
+    enum class GameState
     {
-        return *Instance;
-    }
+        PLAY,
+        EXIT
+    };
 
-    Window &getWindow()
+    class Game
     {
-        return *window.get();
-    }
-    ECSManager &getECSManager()
-    {
-        return *ecsManager.get();
-    }
-};
+    private:
+        std::unique_ptr<Window> window;
+        std::unique_ptr<ECSManager> ecsManager;
+
+        void init();
+        void loop();
+        void handleEvent();
+
+        void registerComponents();
+        void registerSystems();
+        void initializeEntities();
+
+        static Game *Instance;
+
+        GameState gameState;
+
+    public:
+        Game();
+        ~Game() = default;
+        void run();
+
+        static Game &get()
+        {
+            return *Instance;
+        }
+
+        Window &getWindow()
+        {
+            return *window.get();
+        }
+        ECSManager &getECSManager()
+        {
+            return *ecsManager.get();
+        }
+    };
+}

@@ -1,5 +1,5 @@
 #include "ecs/system.h"
-#include "components.h"
+#include "scene/components.h"
 #include "game.h"
 
 // Game scripts / managers
@@ -13,111 +13,106 @@
 
 #include "debug.h"
 
-class RenderSystem : public System
-{
+namespace Crankhy{
 
-public:
-    RenderSystem()
+    class RenderSystem : public System
     {
-        Game::get().getECSManager().addType2Bitset<TextureRenderer>(systemBitset);
-        Game::get().getECSManager().addType2Bitset<Transform>(systemBitset);
-    }
 
-    void tick(float deltaTime) override
-    {
-        for (EntityID entity : entities)
+    public:
+        RenderSystem()
         {
-
-            Transform &transform = Game::get().getECSManager().getComponent<Transform>(entity);
-            TextureRenderer &renderer = Game::get().getECSManager().getComponent<TextureRenderer>(entity);
-
-            int width, height;
-            SDL_QueryTexture(renderer.texture, NULL, NULL, &width, &height);
-
-            SDL_Rect src;
-            src.h = height;
-            src.w = width;
-            src.x = 0;
-            src.y = 0;
-
-            SDL_Rect dest;
-            dest.h = (int)transform.scale.y;
-            dest.w = (int)transform.scale.x;
-            dest.x = (int)transform.position.x;
-            dest.y = (int)transform.position.y;
-            draw(renderer.texture, src, dest);
+            Game::get().getECSManager().addType2Bitset<TextureRendererComponent>(systemBitset);
+            Game::get().getECSManager().addType2Bitset<TransformComponent>(systemBitset);
         }
-    }
-};
 
-class VelocitySystem : public System
-{
-public:
-    VelocitySystem()
-    {
-        Game::get().getECSManager().addType2Bitset<Velocity>(systemBitset);
-        Game::get().getECSManager().addType2Bitset<Transform>(systemBitset);
-    }
-
-    void tick(float deltaTime) override
-    {
-        for (EntityID entity : entities)
+        void tick(float deltaTime) override
         {
-            Transform &eTransform = Game::get().getECSManager().getComponent<Transform>(entity);
-            Velocity &eVelocity = Game::get().getECSManager().getComponent<Velocity>(entity);
+            for (EntityID entity : entities)
+            {
 
-            eTransform.position += eVelocity.velocity;
+                TransformComponent &transform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
+                TextureRendererComponent &renderer = Game::get().getECSManager().getComponent<TextureRendererComponent>(entity);
+
+                SDL_Rect dest;
+                dest.h = (int)transform.scale.y;
+                dest.w = (int)transform.scale.x;
+                dest.x = (int)transform.position.x;
+                dest.y = (int)transform.position.y;
+
+                draw(renderer.sprite, dest);
+            }
         }
-    }
-};
+    };
 
-class MoveOnInputSystem : public System
-{
-public:
-    MoveOnInputSystem()
+    class VelocitySystem : public System
     {
-        Game::get().getECSManager().addType2Bitset<Velocity>(systemBitset);
-        Game::get().getECSManager().addType2Bitset<MoveOnInput>(systemBitset);
-    }
-
-    void tick(float deltaTime) override
-    {
-        for (EntityID entity : entities)
+    public:
+        VelocitySystem()
         {
-            Velocity &eVelocity = Game::get().getECSManager().getComponent<Velocity>(entity);
-            MoveOnInput &eMoveOnInput = Game::get().getECSManager().getComponent<MoveOnInput>(entity);
-
-            Vector dir;
-
-            const float SPEED = 0.2;
-
-            if (inputManager.getKeyState(eMoveOnInput.left))
-            {
-                dir.x = -1;
-            }
-            else if (inputManager.getKeyState(eMoveOnInput.right))
-            {
-                dir.x = 1;
-            }
-            else
-            {
-                dir.x = 0;
-            }
-
-            if (inputManager.getKeyState(eMoveOnInput.up))
-            {
-                dir.y = -1;
-            }
-            else if (inputManager.getKeyState(eMoveOnInput.down))
-            {
-                dir.y = 1;
-            }
-            else
-            {
-                dir.y = 0;
-            }
-
-            eVelocity.velocity = dir.normal() * SPEED;
+            Game::get().getECSManager().addType2Bitset<VelocityComponent>(systemBitset);
+            Game::get().getECSManager().addType2Bitset<TransformComponent>(systemBitset);
         }
-    }
-};
+
+        void tick(float deltaTime) override
+        {
+            for (EntityID entity : entities)
+            {
+                TransformComponent &eTransform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
+                VelocityComponent &eVelocity = Game::get().getECSManager().getComponent<VelocityComponent>(entity);
+
+                eTransform.position += eVelocity.velocity;
+            }
+        }
+    };
+
+    class MoveOnInputSystem : public System
+    {
+    public:
+        MoveOnInputSystem()
+        {
+            Game::get().getECSManager().addType2Bitset<VelocityComponent>(systemBitset);
+            Game::get().getECSManager().addType2Bitset<MoveOnInputComponent>(systemBitset);
+        }
+
+        void tick(float deltaTime) override
+        {
+            for (EntityID entity : entities)
+            {
+                VelocityComponent &eVelocity = Game::get().getECSManager().getComponent<VelocityComponent>(entity);
+                MoveOnInputComponent &eMoveOnInput = Game::get().getECSManager().getComponent<MoveOnInputComponent>(entity);
+
+                Vector dir;
+
+                const float SPEED = 0.2;
+
+                if (inputManager.getKeyState(eMoveOnInput.left))
+                {
+                    dir.x = -1;
+                }
+                else if (inputManager.getKeyState(eMoveOnInput.right))
+                {
+                    dir.x = 1;
+                }
+                else
+                {
+                    dir.x = 0;
+                }
+
+                if (inputManager.getKeyState(eMoveOnInput.up))
+                {
+                    dir.y = -1;
+                }
+                else if (inputManager.getKeyState(eMoveOnInput.down))
+                {
+                    dir.y = 1;
+                }
+                else
+                {
+                    dir.y = 0;
+                }
+
+                eVelocity.velocity = dir.normal() * SPEED;
+            }
+        }
+    };
+}

@@ -2,42 +2,45 @@
 #include "game.h"
 #include "debug.h"
 
-void SystemManager::registerSystem(std::shared_ptr<System> system)
-{
-    debug::log("System  pushed with others systems");
-    systems.push_back(system);
-}
-
-void SystemManager::tick(float deltaTime)
-{
-    for (auto system : systems)
+namespace Crankhy {
+    
+    void SystemManager::registerSystem(std::shared_ptr<System> system)
     {
-        system->tick(deltaTime);
+        debug::log("System  pushed with others systems");
+        systems.push_back(system);
     }
-}
 
-void SystemManager::entityUpdated(EntityID entity)
-{
-    ComponentBitset bitset = Game::get().getECSManager().getBitset(entity);
-    for (int i = 0; i < systems.size(); i++)
+    void SystemManager::tick(float deltaTime)
     {
-        System *system = systems[i].get();
-        ComponentBitset systemBitset = system->getBitset();
-
-        if ((bitset & systemBitset) == systemBitset && !system->hasEntity(entity))
+        for (auto system : systems)
         {
-            system->addEntity(entity);
+            system->tick(deltaTime);
         }
     }
-}
 
-void SystemManager::entityDestroyed(EntityID entity)
-{
-    for (auto system : systems)
+    void SystemManager::entityUpdated(EntityID entity)
     {
-        if (system->hasEntity(entity))
+        ComponentBitset bitset = Game::get().getECSManager().getBitset(entity);
+        for (int i = 0; i < systems.size(); i++)
         {
-            system->removeEntity(entity);
+            System *system = systems[i].get();
+            ComponentBitset systemBitset = system->getBitset();
+
+            if ((bitset & systemBitset) == systemBitset && !system->hasEntity(entity))
+            {
+                system->addEntity(entity);
+            }
+        }
+    }
+
+    void SystemManager::entityDestroyed(EntityID entity)
+    {
+        for (auto system : systems)
+        {
+            if (system->hasEntity(entity))
+            {
+                system->removeEntity(entity);
+            }
         }
     }
 }

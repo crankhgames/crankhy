@@ -1,19 +1,22 @@
 #include "input/input-manager.h"
 #include "debug/debug.h"
 
-void InputManager::setPressed(SDL_Scancode scancode)
-{
-    keys[scancode] = true;
-}
+namespace Crankhy {
 
-void InputManager::setReleased(SDL_Scancode scancode)
-{
-    keys[scancode] = false;
-}
+    void InputManager::setPressed(SDL_Scancode scancode)
+    {
+        keys[scancode] = true;
+    }
 
-bool InputManager::getKeyState(SDL_Scancode scancode)
-{
-    return keys[scancode];
-}
+    void InputManager::setReleased(SDL_Scancode scancode)
+    {
+        keys[scancode] = false;
+    }
 
-InputManager inputManager;
+    bool InputManager::getKeyState(SDL_Scancode scancode)
+    {
+        return keys[scancode];
+    }
+
+    InputManager inputManager;
+}

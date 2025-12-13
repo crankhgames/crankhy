@@ -4,39 +4,46 @@
 #include "game.h"
 #include <unordered_map>
 
-std::unordered_map<const char *, SDL_Texture *> loadedTextures;
+namespace Crankhy{
 
-SDL_Texture *loadTexture(const char *filename)
-{
-    if (loadedTextures.find(filename) != loadedTextures.end())
+    std::unordered_map<const char *, SDL_Texture *> loadedTextures;
+
+    SDL_Texture *loadTexture(const char *filename)
     {
-        return loadedTextures[filename];
+        if (loadedTextures.find(filename) != loadedTextures.end())
+        {
+            return loadedTextures[filename];
+        }
+
+        SDL_Surface *tempSurface = IMG_Load(filename);
+        if (!tempSurface)
+        {
+            debug::error("Failed to load image: ", filename);
+            return nullptr;
+        }
+
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::get().getWindow().renderer, tempSurface);
+        SDL_FreeSurface(tempSurface);
+
+        if (!texture)
+        {
+            debug::error("Failed to create texture from surface: ", filename);
+            return nullptr;
+        }
+
+        loadedTextures[filename] = texture;
+        return texture;
     }
 
-    SDL_Surface *tempSurface = IMG_Load(filename);
-    if (!tempSurface)
+    void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest)
     {
-        debug::error("Failed to load image: ", filename);
-        return nullptr;
+        if (SDL_RenderCopy(Game::get().getWindow().renderer, texture, &src, &dest) != 0)
+        {
+            debug::error("Failed to render texture: ", SDL_GetError());
+        }
     }
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(Game::get().getWindow().renderer, tempSurface);
-    SDL_FreeSurface(tempSurface);
-
-    if (!texture)
-    {
-        debug::error("Failed to create texture from surface: ", filename);
-        return nullptr;
-    }
-
-    loadedTextures[filename] = texture;
-    return texture;
-}
-
-void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest)
-{
-    if (SDL_RenderCopy(Game::get().getWindow().renderer, texture, &src, &dest) != 0)
-    {
-        debug::error("Failed to render texture: ", SDL_GetError());
+    void draw(Sprite* sprite, SDL_Rect dest){
+        draw(sprite->getTexture(), sprite->getSrcRect(), dest);
     }
 }

@@ -4,122 +4,125 @@
 #include "ecs/ecs-manager.h"
 #include "input/input-manager.h"
 
-#include "components.h"
+#include "scene/components.h"
 #include "systems.h"
 
 #include "debug.h"
 #include <iostream>
 #include <memory>
 
-Game *Game::Instance = nullptr;
-Game::Game()
-{
-    if (Instance == nullptr)
+namespace Crankhy{
+
+    Game *Game::Instance = nullptr;
+    Game::Game()
     {
-        Instance = this;
+        if (Instance == nullptr)
+        {
+            Instance = this;
+        }
+        window = std::make_unique<Window>();
+        ecsManager = std::make_unique<ECSManager>();
     }
-    window = std::make_unique<Window>();
-    ecsManager = std::make_unique<ECSManager>();
-}
 
-void Game::run()
-{
-    init();
-
-    while (gameState != GameState::EXIT)
+    void Game::run()
     {
-        loop();
+        init();
+
+        while (gameState != GameState::EXIT)
+        {
+            loop();
+        }
     }
-}
 
-void Game::init()
-{
-
-    SDL_Init(SDL_INIT_EVERYTHING);
-    srand(std::time(NULL));
-
-    window->init();
-    debug::log("Window initialized !");
-    registerComponents();
-    debug::log("Components registered !");
-    registerSystems();
-    debug::log("Systems registered !");
-    initializeEntities();
-    debug::log("Entities intialized !");
-
-    gameState = GameState::PLAY;
-}
-
-void Game::handleEvent()
-{
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type)
+    void Game::init()
     {
-    case SDL_MOUSEBUTTONDOWN:
-        break;
-    case SDL_MOUSEBUTTONUP:
-        break;
-    case SDL_KEYDOWN:
-        inputManager.setPressed(event.key.keysym.scancode);
-        break;
-    case SDL_KEYUP:
-        inputManager.setReleased(event.key.keysym.scancode);
-        break;
-    case SDL_QUIT:
-        gameState = GameState::EXIT;
-        break;
+
+        SDL_Init(SDL_INIT_EVERYTHING);
+        srand(std::time(NULL));
+
+        window->init();
+        debug::log("Window initialized !");
+        registerComponents();
+        debug::log("Components registered !");
+        registerSystems();
+        debug::log("Systems registered !");
+        initializeEntities();
+        debug::log("Entities intialized !");
+
+        gameState = GameState::PLAY;
     }
-}
 
-void Game::loop()
-{
-    handleEvent();
-    window->clearRender();
+    void Game::handleEvent()
+    {
+        SDL_Event event;
+        SDL_PollEvent(&event);
+        switch (event.type)
+        {
+        case SDL_MOUSEBUTTONDOWN:
+            break;
+        case SDL_MOUSEBUTTONUP:
+            break;
+        case SDL_KEYDOWN:
+            inputManager.setPressed(event.key.keysym.scancode);
+            break;
+        case SDL_KEYUP:
+            inputManager.setReleased(event.key.keysym.scancode);
+            break;
+        case SDL_QUIT:
+            gameState = GameState::EXIT;
+            break;
+        }
+    }
 
-    // Main logic
-    ecsManager->tick(0.005);
+    void Game::loop()
+    {
+        handleEvent();
+        window->clearRender();
 
-    window->presentRender();
-}
+        // Main logic
+        ecsManager->tick(0.005);
 
-void Game::registerComponents()
-{
-    ecsManager->registerComponent<Transform>();
-    ecsManager->registerComponent<TextureRenderer>();
-    ecsManager->registerComponent<Velocity>();
-    ecsManager->registerComponent<MoveOnInput>();
-}
+        window->presentRender();
+    }
 
-void Game::registerSystems()
-{
-    ecsManager->registerSystem<MoveOnInputSystem>();
-    ecsManager->registerSystem<VelocitySystem>();
-    ecsManager->registerSystem<RenderSystem>();
-}
+    void Game::registerComponents()
+    {
+        ecsManager->registerComponent<TransformComponent>();
+        ecsManager->registerComponent<TextureRendererComponent>();
+        ecsManager->registerComponent<VelocityComponent>();
+        ecsManager->registerComponent<MoveOnInputComponent>();
+    }
 
-void Game::initializeEntities()
-{
-    EntityID player = ecsManager->createEntity();
+    void Game::registerSystems()
+    {
+        ecsManager->registerSystem<MoveOnInputSystem>();
+        ecsManager->registerSystem<VelocitySystem>();
+        ecsManager->registerSystem<RenderSystem>();
+    }
 
-    Transform pTransform;
-    pTransform.position.set(400, 300);
-    pTransform.scale.set(50, 50);
-    ecsManager->addComponent<Transform>(player, pTransform);
+    void Game::initializeEntities()
+    {
+        EntityID player = ecsManager->createEntity();
 
-    TextureRenderer pTexRenderer;
-    pTexRenderer.texture = loadTexture("assets/sprites/player-sprite.png");
-    ecsManager->addComponent<TextureRenderer>(player, pTexRenderer);
+        TransformComponent pTransform;
+        pTransform.position.set(400, 300);
+        pTransform.scale.set(50, 50);
+        ecsManager->addComponent(player, pTransform);
 
-    Velocity pVelocity;
-    pVelocity.velocity.set(0, 0);
-    ecsManager->addComponent<Velocity>(player, pVelocity);
+        TextureRendererComponent pTexRenderer;
+        pTexRenderer.sprite = new Sprite("assets/sprites/player-sprite.png");
+        ecsManager->addComponent(player, pTexRenderer);
 
-    MoveOnInput pMoveOnInput;
-    pMoveOnInput.down = SDL_SCANCODE_S;
-    pMoveOnInput.up = SDL_SCANCODE_W;
-    pMoveOnInput.left = SDL_SCANCODE_A;
-    pMoveOnInput.right = SDL_SCANCODE_D;
-    ecsManager->addComponent<MoveOnInput>(player, pMoveOnInput);
+        VelocityComponent pVelocity;
+        pVelocity.velocity.set(0, 0);
+        ecsManager->addComponent(player, pVelocity);
 
+        MoveOnInputComponent pMoveOnInput;
+        pMoveOnInput.down = SDL_SCANCODE_S;
+        pMoveOnInput.up = SDL_SCANCODE_W;
+        pMoveOnInput.left = SDL_SCANCODE_A;
+        pMoveOnInput.right = SDL_SCANCODE_D;
+        ecsManager->addComponent(player, pMoveOnInput);
+
+    }
 }

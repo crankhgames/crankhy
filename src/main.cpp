@@ -5,6 +5,6 @@
 
 int main()
 {
-    Game game;
+    Crankhy::Game game;
     game.run();
 }

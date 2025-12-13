@@ -7,71 +7,74 @@
 #include "ecs/ecs.h"
 #include "debug.h"
 
-class ECSManager
-{
-private:
-    std::unique_ptr<ComponentManager> componentManager;
-    std::unique_ptr<EntityManager> entityManager;
-    std::unique_ptr<SystemManager> systemManager;
+namespace Crankhy {
 
-public:
-    ECSManager();
-
-    // Creates entity by retrieving available entity ID
-    EntityID createEntity();
-    // Adds the EntityID to the deletedEntities pool to destroy at end of frame
-    void destroyEntity(EntityID entity);
-
-    ComponentBitset &getBitset(EntityID entity);
-
-    template <typename T>
-    void addComponent(EntityID entity, T component)
+    class ECSManager
     {
-        // Add component to component array through component manager
-        componentManager->addComponent<T>(entity, component);
+    private:
+        std::unique_ptr<ComponentManager> componentManager;
+        std::unique_ptr<EntityManager> entityManager;
+        std::unique_ptr<SystemManager> systemManager;
 
-        // Update the component bitset of the entity
-        addType2Bitset<T>(getBitset(entity));
+    public:
+        ECSManager();
 
-        // Update systems, adds entity in their executing vector (list) if needed
-        systemManager->entityUpdated(entity);
-    }
+        // Creates entity by retrieving available entity ID
+        EntityID createEntity();
+        // Adds the EntityID to the deletedEntities pool to destroy at end of frame
+        void destroyEntity(EntityID entity);
 
-    template <typename T>
-    T &getComponent(EntityID entity)
-    {
-        return componentManager->getComponent<T>(entity);
-    }
+        ComponentBitset &getBitset(EntityID entity);
 
-    template <typename T>
-    void registerComponent()
-    {
-        componentManager->registerComponent<T>();
-    }
+        template <typename T>
+        void addComponent(EntityID entity, T component)
+        {
+            // Add component to component array through component manager
+            componentManager->addComponent<T>(entity, component);
 
-    template <typename T>
-    void addType2Bitset(ComponentBitset &bitset)
-    {
-        bitset[componentManager->getComponentTypeID<T>()] = 1;
-    }
+            // Update the component bitset of the entity
+            addType2Bitset<T>(getBitset(entity));
 
-    /**
-     * @brief Registers new System
-     */
-    template <typename T>
-    void registerSystem()
-    {
-        std::shared_ptr<System> sys = std::make_shared<T>();
-        systemManager->registerSystem(sys);
-    }
+            // Update systems, adds entity in their executing vector (list) if needed
+            systemManager->entityUpdated(entity);
+        }
 
-    /**
-     * @brief Executes every frame
-     */
-    void tick(float deltatime);
+        template <typename T>
+        T &getComponent(EntityID entity)
+        {
+            return componentManager->getComponent<T>(entity);
+        }
 
-    /**
-     * @brief Calls ComponentManager and SystemManager to delete any info related to this entity id
-     */
-    void entityDestroyed(EntityID entity);
-};
+        template <typename T>
+        void registerComponent()
+        {
+            componentManager->registerComponent<T>();
+        }
+
+        template <typename T>
+        void addType2Bitset(ComponentBitset &bitset)
+        {
+            bitset[componentManager->getComponentTypeID<T>()] = 1;
+        }
+
+        /**
+         * @brief Registers new System
+         */
+        template <typename T>
+        void registerSystem()
+        {
+            std::shared_ptr<System> sys = std::make_shared<T>();
+            systemManager->registerSystem(sys);
+        }
+
+        /**
+         * @brief Executes every frame
+         */
+        void tick(float deltatime);
+
+        /**
+         * @brief Calls ComponentManager and SystemManager to delete any info related to this entity id
+         */
+        void entityDestroyed(EntityID entity);
+    };
+}

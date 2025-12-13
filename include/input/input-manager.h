@@ -2,13 +2,16 @@
 #include "SDL2/SDL.h"
 #include <bitset>
 
-struct InputManager
-{
-    std::bitset<SDL_NUM_SCANCODES> keys;
+namespace Crankhy{
 
-    void setPressed(SDL_Scancode scancode);
-    void setReleased(SDL_Scancode scancode);
-    bool getKeyState(SDL_Scancode scancode);
-};
+    struct InputManager
+    {
+        std::bitset<SDL_NUM_SCANCODES> keys;
 
-extern InputManager inputManager;
+        void setPressed(SDL_Scancode scancode);
+        void setReleased(SDL_Scancode scancode);
+        bool getKeyState(SDL_Scancode scancode);
+    };
+
+    extern InputManager inputManager;
+}

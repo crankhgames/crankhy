@@ -1,6 +1,8 @@
 #include "ecs/ecs-manager.h"
 #include "debug/debug.h"
 
+namespace Crankhy {
+
 EntityID ECSManager::createEntity()
 {
     return entityManager->createEntity();
@@ -33,4 +35,6 @@ ECSManager::ECSManager()
     entityManager = std::make_unique<EntityManager>();
     componentManager = std::make_unique<ComponentManager>();
     systemManager = std::make_unique<SystemManager>();
+}
+
 }
