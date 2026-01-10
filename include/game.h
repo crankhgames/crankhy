@@ -4,6 +4,9 @@
 #include "window.h"
 #include "debug.h"
 
+#include "scene/scene.h"
+#include "scene/scene-manager.h"
+
 namespace Crankhy{
 
     enum class GameState
@@ -17,6 +20,12 @@ namespace Crankhy{
     private:
         std::unique_ptr<Window> window;
         std::unique_ptr<ECSManager> ecsManager;
+        std::unique_ptr<SceneManager> sceneManager;
+
+        GameState gameState;
+
+        const int FPS = 60;
+        float deltatime = 0;
 
         void init();
         void loop();
@@ -28,7 +37,6 @@ namespace Crankhy{
 
         static Game *Instance;
 
-        GameState gameState;
 
     public:
         Game();

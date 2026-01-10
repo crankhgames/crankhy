@@ -13,9 +13,9 @@ namespace Crankhy {
 
     public:
         virtual void tick(float deltaTime) = 0;
-        void addEntity(EntityID entity);
+        virtual void addEntity(EntityID entity);
         bool hasEntity(EntityID entity);
-        void removeEntity(EntityID entity);
+        virtual void removeEntity(EntityID entity);
 
         ComponentBitset getBitset() { return systemBitset; }
         ~System() = default;

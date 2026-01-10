@@ -2,10 +2,11 @@
 #include "ecs/ecs.h"
 #include "ecs/system.h"
 #include "ecs/ecs-manager.h"
-#include "input/input-manager.h"
+#include "input/input.h"
 
 #include "scene/components.h"
-#include "systems.h"
+#include "systems/systems.h"
+
 
 #include "debug.h"
 #include <iostream>
@@ -22,6 +23,10 @@ namespace Crankhy{
         }
         window = std::make_unique<Window>();
         ecsManager = std::make_unique<ECSManager>();
+        sceneManager = std::make_unique<SceneManager>();
+
+        sceneManager->registerScene("Main", std::make_shared<MainScene>());
+        sceneManager->registerScene("Secondary", std::make_shared<SecondaryScene>());
     }
 
     void Game::run()
@@ -63,10 +68,10 @@ namespace Crankhy{
         case SDL_MOUSEBUTTONUP:
             break;
         case SDL_KEYDOWN:
-            inputManager.setPressed(event.key.keysym.scancode);
+            Input::setPressed(event.key.keysym.scancode);
             break;
         case SDL_KEYUP:
-            inputManager.setReleased(event.key.keysym.scancode);
+            Input::setReleased(event.key.keysym.scancode);
             break;
         case SDL_QUIT:
             gameState = GameState::EXIT;
@@ -74,13 +79,35 @@ namespace Crankhy{
         }
     }
 
+    bool changeScene = false;
     void Game::loop()
     {
+        Uint64 frameStart = SDL_GetTicks64();
+
         handleEvent();
+
         window->clearRender();
 
         // Main logic
-        ecsManager->tick(0.005);
+        ecsManager->tick(deltatime);
+
+        if (Input::getKeyState(SDL_SCANCODE_SPACE) && !changeScene){
+            changeScene = true;
+            sceneManager->loadScene("Secondary");
+        }
+        else if (!Input::getKeyState(SDL_SCANCODE_SPACE) && changeScene){
+            changeScene = false;
+            sceneManager->loadScene("Main");
+        }
+
+        Uint64 deltaMilliseconds = SDL_GetTicks64() - frameStart;
+        deltatime = deltaMilliseconds / 1000.0f;
+        if (deltatime < 1.0f / FPS){
+            SDL_Delay(1000 / 60 - deltaMilliseconds);
+            deltatime = 1.0f / FPS;
+        }
+        debug::log(deltatime);
+
 
         window->presentRender();
     }
@@ -91,6 +118,7 @@ namespace Crankhy{
         ecsManager->registerComponent<TextureRendererComponent>();
         ecsManager->registerComponent<VelocityComponent>();
         ecsManager->registerComponent<MoveOnInputComponent>();
+        ecsManager->registerComponent<ColliderComponent>();
     }
 
     void Game::registerSystems()
@@ -98,31 +126,11 @@ namespace Crankhy{
         ecsManager->registerSystem<MoveOnInputSystem>();
         ecsManager->registerSystem<VelocitySystem>();
         ecsManager->registerSystem<RenderSystem>();
+        ecsManager->registerSystem<CollisionSystem>();
     }
 
     void Game::initializeEntities()
     {
-        EntityID player = ecsManager->createEntity();
-
-        TransformComponent pTransform;
-        pTransform.position.set(400, 300);
-        pTransform.scale.set(50, 50);
-        ecsManager->addComponent(player, pTransform);
-
-        TextureRendererComponent pTexRenderer;
-        pTexRenderer.sprite = new Sprite("assets/sprites/player-sprite.png");
-        ecsManager->addComponent(player, pTexRenderer);
-
-        VelocityComponent pVelocity;
-        pVelocity.velocity.set(0, 0);
-        ecsManager->addComponent(player, pVelocity);
-
-        MoveOnInputComponent pMoveOnInput;
-        pMoveOnInput.down = SDL_SCANCODE_S;
-        pMoveOnInput.up = SDL_SCANCODE_W;
-        pMoveOnInput.left = SDL_SCANCODE_A;
-        pMoveOnInput.right = SDL_SCANCODE_D;
-        ecsManager->addComponent(player, pMoveOnInput);
-
+        sceneManager->loadScene("Main");
     }
 }

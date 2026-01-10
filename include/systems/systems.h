@@ -1,0 +1,4 @@
+#include "systems/moveinput-system.h"
+#include "systems/render-system.h"
+#include "systems/velocity-system.h"
+#include "systems/collision-system.h"

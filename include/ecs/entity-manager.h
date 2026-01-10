@@ -19,10 +19,6 @@ namespace Crankhy{
         std::queue<EntityID> availableEntities;
 
     public:
-        /**
-         * @brief ID for inexistant entities
-         */
-        EntityID nullEntity = -1;
 
         /**
          * @brief Creates an instance of EntityManager and generates avaiable entities
@@ -78,5 +74,10 @@ namespace Crankhy{
          * @brief Deletes each "deleted" entity one by one by destroying every component it owns
          */
         void handleDestroyedEntities();
+
+        /**
+         * @brief Clears entities
+         */
+        void clearEntities();
     };
 }

@@ -73,4 +73,10 @@ namespace Crankhy {
             availableEntities.push(deletedEntity);
         }
     }
+    
+    void EntityManager::clearEntities(){
+        for (auto& id : componentBitsets){
+            destroyEntity(id.first);
+        }
+    }
 }

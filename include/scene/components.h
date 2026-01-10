@@ -4,6 +4,8 @@
 #include "math/vector.h"
 #include "graphics/sprite.h"
 
+#include <variant>
+
 namespace Crankhy{
 
     struct TransformComponent
@@ -15,7 +17,6 @@ namespace Crankhy{
     struct TextureRendererComponent
     {
         Sprite* sprite;
-        
     };
 
     struct VelocityComponent
@@ -30,4 +31,32 @@ namespace Crankhy{
         SDL_Scancode left;
         SDL_Scancode right;
     };
+
+    enum class ColliderType{
+        None,
+        Rectangle,
+        Circle
+    };
+
+
+
+    struct CircleColliderComponent{
+        float radius;
+        bool isStatic;
+
+        ColliderType type = ColliderType::Circle;
+
+    };
+
+    struct RectColliderComponent{
+        Vector bounds;
+        bool isStatic;
+
+        ColliderType type = ColliderType::Rectangle;
+
+    };
+
+
+    using ColliderComponent = std::variant<RectColliderComponent, CircleColliderComponent>;
+
 }

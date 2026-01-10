@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "debug.h"
+
 namespace Crankhy{
 
     class ComponentManager
@@ -51,7 +53,11 @@ namespace Crankhy{
         template <typename T>
         ComponentTypeID getComponentTypeID()
         {
-            return componentTypeName2ID[getComponentType<T>()];
+            ComponentType type = getComponentType<T>();
+            if (componentTypeName2ID.find(type) == componentTypeName2ID.end()){
+                debug::error("Type ", type, " is not registered yet or is invalid !");
+            }
+            return componentTypeName2ID[type];
         }
 
         /**

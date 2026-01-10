@@ -2,6 +2,8 @@
 #include <iostream>
 
 namespace debug{
+
+
     template <typename... Args>
     void log(const Args &...args)
     {
@@ -22,4 +24,5 @@ namespace debug{
         std::cout << "[ERROR]: ";
         (std::cout << ... << args) << std::endl;
     }
+
 }

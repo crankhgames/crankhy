@@ -1,52 +1,55 @@
 #include "math/vector.h"
 #include <cmath>
 
-namespace Crankhy {
-    void Vector::set(float x, float y)
+void Vector::set(float x, float y)
+{
+    this->x = x;
+    this->y = y;
+}
+
+float Vector::length()
+{
+    return sqrt(this->lengthSquared());
+}
+
+float Vector::lengthSquared()
+{
+    return x * x + y * y;
+}
+
+Vector Vector::normal()
+{
+    if (lengthSquared() == 0)
     {
-        this->x = x;
-        this->y = y;
+        return *this;
     }
 
-    float Vector::length()
-    {
-        return sqrt(this->lengthSquared());
-    }
+    return *this / length();
+}
 
-    float Vector::lengthSquared()
-    {
-        return x * x + y * y;
-    }
+void Vector::normalize()
+{
+    x /= length();
+    y /= length();
+}
 
-    Vector Vector::normal()
-    {
-        if (lengthSquared() == 0)
-        {
-            return *this;
-        }
+float Vector::distance(const Vector &v)
+{
+    return (*this - v).length();
+}
 
-        return *this / length();
-    }
+float Vector::distanceSquared(const Vector &v){
+    float dx = x + v.x;
+    float dy = y + v.y;
+    return dx*dx + dy*dy;
+}
 
-    void Vector::normalize()
-    {
-        x /= length();
-        y /= length();
-    }
+float Vector::dot(const Vector &v)
+{
+    return x * v.x + y * v.y;
+}
 
-    float Vector::distance(const Vector &v)
-    {
-        return (*this - v).length();
-    }
-
-    float Vector::dot(const Vector &v)
-    {
-        return x * v.x + y * v.y;
-    }
-
-    float Vector::cross(const Vector &v)
-    {
-        return x * v.y - y * v.x;
-    }
-
+float Vector::cross(const Vector &v)
+{
+    return x * v.y - y * v.x;
 }

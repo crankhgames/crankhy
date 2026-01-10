@@ -26,8 +26,8 @@ ComponentBitset &ECSManager::getBitset(EntityID entity)
 
 void ECSManager::entityDestroyed(EntityID entity)
 {
-    componentManager->entityDestroyed(entity);
     systemManager->entityDestroyed(entity);
+    componentManager->entityDestroyed(entity);
 }
 
 ECSManager::ECSManager()
@@ -35,6 +35,10 @@ ECSManager::ECSManager()
     entityManager = std::make_unique<EntityManager>();
     componentManager = std::make_unique<ComponentManager>();
     systemManager = std::make_unique<SystemManager>();
+}
+
+void ECSManager::clearEntities(){
+    entityManager->clearEntities();
 }
 
 }

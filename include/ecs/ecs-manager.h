@@ -7,6 +7,8 @@
 #include "ecs/ecs.h"
 #include "debug.h"
 
+#include "scene/components.h"
+
 namespace Crankhy {
 
     class ECSManager
@@ -29,6 +31,8 @@ namespace Crankhy {
         template <typename T>
         void addComponent(EntityID entity, T component)
         {
+
+            debug::log("Type: ", typeid(T).name());
             // Add component to component array through component manager
             componentManager->addComponent<T>(entity, component);
 
@@ -76,5 +80,7 @@ namespace Crankhy {
          * @brief Calls ComponentManager and SystemManager to delete any info related to this entity id
          */
         void entityDestroyed(EntityID entity);
+
+        void clearEntities();
     };
 }
