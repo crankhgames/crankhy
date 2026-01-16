@@ -1,4 +1,5 @@
 #include "ecs/system.h"
+#include "game.h"
 
 namespace Crankhy {
 

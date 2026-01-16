@@ -25,8 +25,8 @@ namespace Crankhy{
     public:
         CollisionSystem()
         {
-            Game::get().getECSManager().addType2Bitset<TransformComponent>(systemBitset);
-            Game::get().getECSManager().addType2Bitset<ColliderComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<TransformComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<ColliderComponent>(systemBitset);
         }
 
         bool isColliding(EntityID entityA, EntityID entityB){
@@ -46,11 +46,11 @@ namespace Crankhy{
         }
 
         bool isCollidingRectvsRect(EntityID entityA, EntityID entityB){
-            TransformComponent& transformA = Game::get().getECSManager().getComponent<TransformComponent>(entityA);
-            TransformComponent& transformB = Game::get().getECSManager().getComponent<TransformComponent>(entityB);
+            TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
+            TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityA));
-            RectColliderComponent& colliderB = std::get<RectColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityB));
+            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
+            RectColliderComponent& colliderB = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
 
 
 
@@ -71,11 +71,11 @@ namespace Crankhy{
 
         bool isCollidingRectvsCircle(EntityID entityA, EntityID entityB){
 
-            TransformComponent& transformA = Game::get().getECSManager().getComponent<TransformComponent>(entityA);
-            TransformComponent& transformB = Game::get().getECSManager().getComponent<TransformComponent>(entityB);
+            TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
+            TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityA));
-            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityB));
+            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
+            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
 
 
             float leftA = transformA.position.x;
@@ -96,11 +96,11 @@ namespace Crankhy{
 
         bool isCollidingCirclevsCircle(EntityID entityA, EntityID entityB){
 
-            TransformComponent& transformA = Game::get().getECSManager().getComponent<TransformComponent>(entityA);
-            TransformComponent& transformB = Game::get().getECSManager().getComponent<TransformComponent>(entityB);
+            TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
+            TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            CircleColliderComponent& colliderA = std::get<CircleColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityA));
-            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECSManager().getComponent<ColliderComponent>(entityB));
+            CircleColliderComponent& colliderA = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
+            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
 
             float distanceSquared = (transformA.position - transformB.position).lengthSquared();
             return distanceSquared > SDL_powf(colliderA.radius + colliderB.radius, 2);
@@ -108,7 +108,7 @@ namespace Crankhy{
 
         void addEntity(EntityID entity) override{
             System::addEntity(entity);
-            ColliderComponent& collider = Game::get().getECSManager().getComponent<ColliderComponent>(entity);
+            ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
             grid.addEntity(entity);
             
             if (std::holds_alternative<RectColliderComponent>(collider)){

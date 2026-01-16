@@ -5,8 +5,8 @@
 namespace Crankhy{
 
     void Grid::addEntity(EntityID entity){
-        TransformComponent& transform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
-        ColliderComponent& collider = Game::get().getECSManager().getComponent<ColliderComponent>(entity);
+        TransformComponent& transform = Game::get().getECS().getComponent<TransformComponent>(entity);
+        ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
 
 
         int xidx = transform.position.x / cellSize;
@@ -26,7 +26,7 @@ namespace Crankhy{
     }
 
     void Grid::removeEntity(EntityID entity){
-        TransformComponent& transform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
+        TransformComponent& transform = Game::get().getECS().getComponent<TransformComponent>(entity);
 
         int xidx = transform.position.x / cellSize;
         int yidx = transform.position.y / cellSize;
@@ -49,7 +49,7 @@ namespace Crankhy{
         }
 
         
-        TransformComponent& transform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
+        TransformComponent& transform = Game::get().getECS().getComponent<TransformComponent>(entity);
 
         int xidx = transform.position.x / cellSize;
         int yidx = transform.position.y / cellSize;
@@ -114,7 +114,7 @@ namespace Crankhy{
     }
 
     bool hasStaticCollider(EntityID entity){
-        ColliderComponent& collider = Game::get().getECSManager().getComponent<ColliderComponent>(entity);
+        ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
 
         if (std::holds_alternative<RectColliderComponent>(collider)){
             return std::get<RectColliderComponent>(collider).isStatic;
