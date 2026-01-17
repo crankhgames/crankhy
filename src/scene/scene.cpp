@@ -13,56 +13,86 @@ namespace Crankhy{
         float randomX = rand() / (float)RAND_MAX * 700 + 50;
         float randomY = rand() / (float)RAND_MAX * 500 + 50;
 
-        TransformComponent bTransform;
-        bTransform.position = Vector(randomX, randomY);
-        bTransform.scale = Vector(randomRadius*2, randomRadius*2);
-        Game::get().getECS().addComponent(block, bTransform);
+        Game::get().getECS().addComponent(block, 
+            TransformComponent{
+                .position = Vector(randomX, randomY),
+                .scale = Vector(randomRadius*2, randomRadius*2)
+            }
+        );
 
-        TextureRendererComponent bTextRenderer;
-        bTextRenderer.sprite = new Sprite("assets/sprites/player-sprite.png");
-        Game::get().getECS().addComponent(block, bTextRenderer);
+        Game::get().getECS().addComponent(block, 
+            TextureRendererComponent{
+                .sprite = new Spritesheet("assets/sprites/player-sprite.png", 1, 1)
+            }
+        );
 
-        VelocityComponent bVelocity;
-        bVelocity.velocity = Vector();
-        Game::get().getECS().addComponent(block, bVelocity);
+        Game::get().getECS().addComponent(block, 
+            VelocityComponent{
+                .velocity = Vector()
+            }
+        );
 
-        RectColliderComponent bCollider;
-        bCollider.bounds = {randomRadius*2, randomRadius*2};
-        bCollider.isStatic = true;
-        Game::get().getECS().addComponent<ColliderComponent>(block, bCollider);
+        Game::get().getECS().addComponent<ColliderComponent>(block, 
+            RectColliderComponent{
+                .bounds = Vector(randomRadius*2, randomRadius*2),
+                .isStatic = true
+            }
+        );
     }
 
     void MainScene::initializeEntities() {
-        for (int i = 0; i < 250; i++){
+        for (int i = 0; i < 2; i++){
             spawnBlock();
         }
 
         EntityID player = Game::get().getECS().createEntity();
 
-        TransformComponent pTransform;
-        pTransform.position = Vector(400, 300);
-        pTransform.scale = Vector(50, 50);
-        Game::get().getECS().addComponent(player, pTransform);
+        Game::get().getECS().addComponent(player, 
+            TransformComponent{
+                .position = Vector(400, 300),
+                .scale = Vector(100, 100)
+            }
+        );
 
-        TextureRendererComponent pTexRenderer;
-        pTexRenderer.sprite = new Sprite("assets/sprites/logo.png");
-        Game::get().getECS().addComponent(player, pTexRenderer);
+        Game::get().getECS().addComponent(player, 
+            TextureRendererComponent{
+                .sprite = new Spritesheet("assets/sprites/hollow-knight-sheet.png", 12, 10)
+            }
+        );
 
-        VelocityComponent pVelocity;
-        pVelocity.velocity = Vector();
-        Game::get().getECS().addComponent(player, pVelocity);
+        Game::get().getECS().addComponent(player, 
+            AnimationRendererComponent{
+                .startFrame=78,
+                .endFrame=83,
+                .nextFrameCounter=.1f,
+                .currentFrame=78,
+            }
+        );
 
-        MoveOnInputComponent pMoveOnInput;
-        pMoveOnInput.down = SDL_SCANCODE_S;
-        pMoveOnInput.up = SDL_SCANCODE_W;
-        pMoveOnInput.left = SDL_SCANCODE_A;
-        pMoveOnInput.right = SDL_SCANCODE_D;
-        Game::get().getECS().addComponent(player, pMoveOnInput);
+
+        Game::get().getECS().addComponent(player, 
+            VelocityComponent{
+                .velocity = Vector()
+            }
+        );
+
+        Game::get().getECS().addComponent(player, 
+            MoveOnInputComponent{
+                .up = SDL_SCANCODE_W,
+                .down = SDL_SCANCODE_S,
+                .left = SDL_SCANCODE_A,
+                .right = SDL_SCANCODE_D
+            }
+        );
 
         RectColliderComponent pCollider;
-        pCollider.bounds = Vector(50, 50);
-        pCollider.isStatic = false;
-        Game::get().getECS().addComponent<ColliderComponent>(player, pCollider);
+        Game::get().getECS().addComponent<ColliderComponent>(player, 
+            RectColliderComponent{
+                pCollider.bounds = Vector(100, 100),
+                pCollider.isStatic = false
+            }
+
+        );
 
 
     }
@@ -70,27 +100,34 @@ namespace Crankhy{
     void SecondaryScene::initializeEntities(){
         EntityID player = Game::get().getECS().createEntity();
 
-        TransformComponent pTransform;
-        pTransform.position.set(400, 300);
-        pTransform.scale.set(100, 100);
-        Game::get().getECS().addComponent(player, pTransform);
-
-        TextureRendererComponent pTexRenderer;
-        pTexRenderer.sprite = new Sprite("assets/sprites/player-sprite.png");
-        Game::get().getECS().addComponent(player, pTexRenderer);
-
-        VelocityComponent pVelocity;
-        pVelocity.velocity.set(0, 0);
-        Game::get().getECS().addComponent(player, pVelocity);
-
-        MoveOnInputComponent pMoveOnInput;
-        pMoveOnInput.down = SDL_SCANCODE_S;
-        pMoveOnInput.up = SDL_SCANCODE_W;
-        pMoveOnInput.left = SDL_SCANCODE_A;
-        pMoveOnInput.right = SDL_SCANCODE_D;
-        Game::get().getECS().addComponent(player, pMoveOnInput);
+        Game::get().getECS().addComponent(player, 
+            TransformComponent{
+                .position = Vector(400, 300),
+                .scale = Vector(100, 100)
+            }
+        );
 
 
+        Game::get().getECS().addComponent(player, 
+            TextureRendererComponent{
+                .sprite = new Spritesheet("assets/sprites/logo.png", 1, 1)
+            }
+        );
+
+        Game::get().getECS().addComponent(player, 
+            VelocityComponent{
+                .velocity = Vector()
+            }
+        );
+
+        Game::get().getECS().addComponent(player, 
+            MoveOnInputComponent{
+                .up = SDL_SCANCODE_W,
+                .down = SDL_SCANCODE_S,
+                .left = SDL_SCANCODE_A,
+                .right = SDL_SCANCODE_D
+            }
+        );
        
     }
 }

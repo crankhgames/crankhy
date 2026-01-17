@@ -2,3 +2,4 @@
 #include "systems/render-system.h"
 #include "systems/velocity-system.h"
 #include "systems/collision-system.h"
+#include "systems/animationrenderer-system.h"

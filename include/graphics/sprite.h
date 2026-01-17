@@ -21,7 +21,7 @@ namespace Crankhy {
         SDL_Rect getSrcRect() {return srcRect;}
     };
 
-    class Spritesheet : Sprite{
+    class Spritesheet : public Sprite{
 
     private:
         int currentSpriteIndex = 0;

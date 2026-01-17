@@ -1,6 +1,8 @@
 #include "graphics/sprite.h"
 #include "graphics/texture-manager.h"
 
+#include "debug.h"
+
 namespace Crankhy {
 
     Sprite::Sprite(const char* filename){
@@ -17,20 +19,26 @@ namespace Crankhy {
         texture = loadTexture(filename);
         SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 
+        this->numberOfSpritesX = numberOfSpritesX;
+        this->numberOfSpritesY = numberOfSpritesY;
+
         srcRect.x = 0;
         srcRect.y = 0;
         currentSpriteIndex = 0;
 
         srcRect.w = width / numberOfSpritesX;
-        srcRect.h = height / numberOfSpritesX;
+        srcRect.h = height / numberOfSpritesY;
     }
     
     void Spritesheet::changeSprite(int spriteIndex){
+        debug::log("Current Sprite Index: ", currentSpriteIndex);
         if (currentSpriteIndex == spriteIndex){
             return;
         }
 
         srcRect.x = (spriteIndex % numberOfSpritesX) * srcRect.w;
-        srcRect.y = (spriteIndex / numberOfSpritesY) * srcRect.h;
+        srcRect.y = (spriteIndex / numberOfSpritesX) * srcRect.h;
+        debug::log("SRC rect x: ", srcRect.x, "; SRC rect y: ", srcRect.y);
+        currentSpriteIndex = spriteIndex;
     }
 }

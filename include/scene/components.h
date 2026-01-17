@@ -16,7 +16,7 @@ namespace Crankhy{
 
     struct TextureRendererComponent
     {
-        Sprite* sprite;
+        Spritesheet* sprite;
     };
 
     struct VelocityComponent
@@ -30,6 +30,19 @@ namespace Crankhy{
         SDL_Scancode down;
         SDL_Scancode left;
         SDL_Scancode right;
+    };
+
+    struct AnimationRendererComponent{
+        
+        int startFrame;
+        int endFrame;
+        
+        float nextFrameCounter;
+
+        float counter = 0;
+        int currentFrame = 0;
+
+
     };
 
     enum class ColliderType{
