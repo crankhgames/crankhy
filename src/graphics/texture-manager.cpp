@@ -43,7 +43,7 @@ namespace Crankhy{
         }
     }
 
-    void draw(Sprite* sprite, SDL_Rect dest){
+    void draw(Spritesheet* sprite, SDL_Rect dest){
         draw(sprite->getTexture(), sprite->getSrcRect(), dest);
     }
 }

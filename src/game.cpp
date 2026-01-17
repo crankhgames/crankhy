@@ -119,6 +119,7 @@ namespace Crankhy{
         ecs->registerComponent<VelocityComponent>();
         ecs->registerComponent<MoveOnInputComponent>();
         ecs->registerComponent<ColliderComponent>();
+        ecs->registerComponent<AnimationRendererComponent>();
     }
 
     void Game::registerSystems()
@@ -126,6 +127,7 @@ namespace Crankhy{
         ecs->registerSystem<MoveOnInputSystem>();
         ecs->registerSystem<VelocitySystem>();
         ecs->registerSystem<RenderSystem>();
+        ecs->registerSystem<AnimationRendererSystem>();
         ecs->registerSystem<CollisionSystem>();
     }
 
