@@ -20,7 +20,7 @@ namespace Crankhy {
 
     void SystemManager::entityUpdated(EntityID entity)
     {
-        ComponentBitset bitset = Game::get().getECSManager().getBitset(entity);
+        ComponentBitset bitset = Game::get().getECS().getBitset(entity);
         for (int i = 0; i < systems.size(); i++)
         {
             System *system = systems[i].get();

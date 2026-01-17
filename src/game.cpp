@@ -22,7 +22,7 @@ namespace Crankhy{
             Instance = this;
         }
         window = std::make_unique<Window>();
-        ecsManager = std::make_unique<ECSManager>();
+        ecs = std::make_unique<ECSManager>();
         sceneManager = std::make_unique<SceneManager>();
 
         sceneManager->registerScene("Main", std::make_shared<MainScene>());
@@ -89,7 +89,7 @@ namespace Crankhy{
         window->clearRender();
 
         // Main logic
-        ecsManager->tick(deltatime);
+        ecs->tick(deltatime);
 
         if (Input::getKeyState(SDL_SCANCODE_SPACE) && !changeScene){
             changeScene = true;
@@ -106,7 +106,7 @@ namespace Crankhy{
             SDL_Delay(1000 / 60 - deltaMilliseconds);
             deltatime = 1.0f / FPS;
         }
-        debug::log(deltatime);
+        debug::log("Framerate: ", 1/deltatime, " FPS");
 
 
         window->presentRender();
@@ -114,19 +114,19 @@ namespace Crankhy{
 
     void Game::registerComponents()
     {
-        ecsManager->registerComponent<TransformComponent>();
-        ecsManager->registerComponent<TextureRendererComponent>();
-        ecsManager->registerComponent<VelocityComponent>();
-        ecsManager->registerComponent<MoveOnInputComponent>();
-        ecsManager->registerComponent<ColliderComponent>();
+        ecs->registerComponent<TransformComponent>();
+        ecs->registerComponent<TextureRendererComponent>();
+        ecs->registerComponent<VelocityComponent>();
+        ecs->registerComponent<MoveOnInputComponent>();
+        ecs->registerComponent<ColliderComponent>();
     }
 
     void Game::registerSystems()
     {
-        ecsManager->registerSystem<MoveOnInputSystem>();
-        ecsManager->registerSystem<VelocitySystem>();
-        ecsManager->registerSystem<RenderSystem>();
-        ecsManager->registerSystem<CollisionSystem>();
+        ecs->registerSystem<MoveOnInputSystem>();
+        ecs->registerSystem<VelocitySystem>();
+        ecs->registerSystem<RenderSystem>();
+        ecs->registerSystem<CollisionSystem>();
     }
 
     void Game::initializeEntities()

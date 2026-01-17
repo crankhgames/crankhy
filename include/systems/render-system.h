@@ -18,8 +18,8 @@ namespace Crankhy{
         public:
             RenderSystem()
             {
-                Game::get().getECSManager().addType2Bitset<TextureRendererComponent>(systemBitset);
-                Game::get().getECSManager().addType2Bitset<TransformComponent>(systemBitset);
+                Game::get().getECS().addType2Bitset<TextureRendererComponent>(systemBitset);
+                Game::get().getECS().addType2Bitset<TransformComponent>(systemBitset);
             }
 
             void tick(float deltaTime) override
@@ -27,8 +27,8 @@ namespace Crankhy{
                 for (EntityID entity : entities)
                 {
 
-                    TransformComponent &transform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
-                    TextureRendererComponent &renderer = Game::get().getECSManager().getComponent<TextureRendererComponent>(entity);
+                    TransformComponent &transform = Game::get().getECS().getComponent<TransformComponent>(entity);
+                    TextureRendererComponent &renderer = Game::get().getECS().getComponent<TextureRendererComponent>(entity);
 
                     SDL_Rect dest;
                     dest.h = (int)transform.scale.y;

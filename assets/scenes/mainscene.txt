@@ -1,0 +1,10 @@
+Player
+    - TransformComponent 500 500 65 65
+    - RectColliderComponent 65 65 
+
+Enemy
+    - TransformComponent 200 100 50 50
+    - CircleColliderComponent 25 
+
+Player player1
+Enemy enemy1

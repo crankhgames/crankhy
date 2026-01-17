@@ -19,7 +19,7 @@ namespace Crankhy{
     {
     private:
         std::unique_ptr<Window> window;
-        std::unique_ptr<ECSManager> ecsManager;
+        std::unique_ptr<ECSManager> ecs;
         std::unique_ptr<SceneManager> sceneManager;
 
         GameState gameState;
@@ -52,9 +52,9 @@ namespace Crankhy{
         {
             return *window.get();
         }
-        ECSManager &getECSManager()
+        ECSManager &getECS()
         {
-            return *ecsManager.get();
+            return *ecs.get();
         }
     };
 }

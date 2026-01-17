@@ -103,6 +103,7 @@ namespace Crankhy{
             componentArrays.push_back(std::make_shared<ComponentArray<T>>());
         }
 
+
         /**
          * @brief Prints out to the console information about the component manager (component types)
          */

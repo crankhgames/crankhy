@@ -69,7 +69,7 @@ namespace Crankhy {
         for (; !deletedEntities.empty(); deletedEntities.pop())
         {
             EntityID deletedEntity = deletedEntities.front();
-            Game::get().getECSManager().entityDestroyed(deletedEntity);
+            Game::get().getECS().entityDestroyed(deletedEntity);
             availableEntities.push(deletedEntity);
         }
     }

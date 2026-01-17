@@ -19,16 +19,16 @@ namespace Crankhy{
     public:
         MoveOnInputSystem()
         {
-            Game::get().getECSManager().addType2Bitset<VelocityComponent>(systemBitset);
-            Game::get().getECSManager().addType2Bitset<MoveOnInputComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<VelocityComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<MoveOnInputComponent>(systemBitset);
         }
 
         void tick(float deltaTime) override
         {
             for (EntityID entity : entities)
             {
-                VelocityComponent &eVelocity = Game::get().getECSManager().getComponent<VelocityComponent>(entity);
-                MoveOnInputComponent &eMoveOnInput = Game::get().getECSManager().getComponent<MoveOnInputComponent>(entity);
+                VelocityComponent &eVelocity = Game::get().getECS().getComponent<VelocityComponent>(entity);
+                MoveOnInputComponent &eMoveOnInput = Game::get().getECS().getComponent<MoveOnInputComponent>(entity);
 
                 Vector dir = Vector(0, 0);
 

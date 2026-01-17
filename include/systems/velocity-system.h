@@ -18,16 +18,16 @@ namespace Crankhy{
     public:
         VelocitySystem()
         {
-            Game::get().getECSManager().addType2Bitset<VelocityComponent>(systemBitset);
-            Game::get().getECSManager().addType2Bitset<TransformComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<VelocityComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<TransformComponent>(systemBitset);
         }
 
         void tick(float deltaTime) override
         {
             for (EntityID entity : entities)
             {
-                TransformComponent &eTransform = Game::get().getECSManager().getComponent<TransformComponent>(entity);
-                VelocityComponent &eVelocity = Game::get().getECSManager().getComponent<VelocityComponent>(entity);
+                TransformComponent &eTransform = Game::get().getECS().getComponent<TransformComponent>(entity);
+                VelocityComponent &eVelocity = Game::get().getECS().getComponent<VelocityComponent>(entity);
 
                 eTransform.position += eVelocity.velocity * deltaTime;
             }

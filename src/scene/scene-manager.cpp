@@ -8,7 +8,7 @@ void SceneManager::loadScene(std::string_view sceneName){
     currentSceneName = sceneName;
     std::string name = (std::string)sceneName;
     currentScene = scenes[name];
-    Game::get().getECSManager().clearEntities();
+    Game::get().getECS().clearEntities();
     currentScene->initializeEntities();
 }
 
