@@ -26,16 +26,14 @@ namespace Crankhy{
 
         Game::get().getECS().getComponent<TextureRendererComponent>(block).sprite->changeSprite(5);
 
-        Game::get().getECS().addComponent(block, 
-            VelocityComponent{
-                .velocity = Vector()
-            }
-        );
-
         Game::get().getECS().addComponent<ColliderComponent>(block, 
-            RectColliderComponent{
-                .bounds = Vector(size*2, size*2),
-                .isStatic = true
+            ColliderComponent {
+                .type=ColliderType::Rectangle,
+                .isStatic = false,
+                .shapeInfo=RectCollisionInfo{
+                    .bounds=Vector(size*2, size*2)
+                },
+
             }
         );
     }
@@ -77,6 +75,17 @@ namespace Crankhy{
                 .endFrame=83,
                 .nextFrameCounter=.1f,
                 .currentFrame=78,
+            }
+        );
+
+        Game::get().getECS().addComponent<ColliderComponent>(player, 
+            ColliderComponent {
+                .type=ColliderType::Rectangle,
+                .isStatic = false,
+                .shapeInfo=RectCollisionInfo{
+                    .bounds=Vector(50, 50)
+                },
+
             }
         );
 
