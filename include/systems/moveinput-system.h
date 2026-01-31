@@ -14,6 +14,7 @@
 
 namespace Crankhy{ 
 
+
     class MoveOnInputSystem : public System
     {
     public:
@@ -21,6 +22,7 @@ namespace Crankhy{
         {
             Game::get().getECS().addType2Bitset<VelocityComponent>(systemBitset);
             Game::get().getECS().addType2Bitset<MoveOnInputComponent>(systemBitset);
+            Game::get().getECS().addType2Bitset<TextureRendererComponent>(systemBitset);
         }
 
         void tick(float deltaTime) override
@@ -29,10 +31,11 @@ namespace Crankhy{
             {
                 VelocityComponent &eVelocity = Game::get().getECS().getComponent<VelocityComponent>(entity);
                 MoveOnInputComponent &eMoveOnInput = Game::get().getECS().getComponent<MoveOnInputComponent>(entity);
+                TextureRendererComponent &eTexRenderer = Game::get().getECS().getComponent<TextureRendererComponent>(entity);
 
                 Vector dir = Vector(0, 0);
 
-                const float SPEED = 400.0f;
+                const float SPEED = 2.0f;
 
                 if (Input::getKeyState(eMoveOnInput.left))
                 {
@@ -60,7 +63,11 @@ namespace Crankhy{
                     dir.y = 0;
                 }
 
+                if (dir.x != 0){
+                    eTexRenderer.flipX = dir.x == -1;
+                }
                 eVelocity.velocity = dir.normal() * SPEED;
+
             }
         }
     };

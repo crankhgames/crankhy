@@ -8,6 +8,7 @@ namespace Crankhy{
 
     std::unordered_map<const char *, SDL_Texture *> loadedTextures;
 
+
     SDL_Texture *loadTexture(const char *filename)
     {
         if (loadedTextures.find(filename) != loadedTextures.end())
@@ -35,15 +36,15 @@ namespace Crankhy{
         return texture;
     }
 
-    void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest)
+    void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest, bool flipX, bool flipY)
     {
-        if (SDL_RenderCopy(Game::get().getWindow().renderer, texture, &src, &dest) != 0)
+        if (SDL_RenderCopyEx(Game::get().getWindow().renderer, texture, &src, &dest, 0, NULL, (SDL_RendererFlip)((flipX ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE) | (flipY ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE))) != 0)
         {
             debug::error("Failed to render texture: ", SDL_GetError());
         }
     }
 
-    void draw(Spritesheet* sprite, SDL_Rect dest){
-        draw(sprite->getTexture(), sprite->getSrcRect(), dest);
+    void draw(Sprite* sprite, SDL_Rect dest, bool flipX, bool flipY){
+        draw(sprite->getTexture(), sprite->getSrcRect(), dest, flipX, flipY);
     }
 }

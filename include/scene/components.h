@@ -5,6 +5,7 @@
 #include "graphics/sprite.h"
 
 #include <variant>
+#include <memory>
 
 namespace Crankhy{
 
@@ -12,11 +13,19 @@ namespace Crankhy{
     {
         Vector position;
         Vector scale;
+
+    };
+
+    struct FollowComponent{
+        TransformComponent* followedTransform;
+        Vector offset;
     };
 
     struct TextureRendererComponent
     {
         Spritesheet* sprite;
+        bool flipX = false;
+        bool flipY = false;
     };
 
     struct VelocityComponent
@@ -43,6 +52,11 @@ namespace Crankhy{
         int currentFrame = 0;
 
 
+    };
+
+
+    struct CameraComponent{
+        Vector pixelsToUnit;
     };
 
     enum class ColliderType{

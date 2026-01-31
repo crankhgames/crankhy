@@ -4,6 +4,6 @@
 
 namespace Crankhy {
     SDL_Texture *loadTexture(const char *filename);
-    void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest);
-    void draw(Spritesheet* sprite, SDL_Rect dest);
+    void draw(SDL_Texture *texture, SDL_Rect src, SDL_Rect dest, bool flipX=false, bool flipY=false);
+    void draw(Sprite* sprite, SDL_Rect dest, bool flipX=false, bool flipY=false);
 }
