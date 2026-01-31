@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <array>
+#include "scene/components.h"
 
 namespace Crankhy{
 
@@ -16,8 +17,8 @@ namespace Crankhy{
 
     class Grid{
     private:
-        static const int width = 800;
-        static const int height = 600;
+        static const int width = 100;
+        static const int height = 100;
         static const int cellSize = 100;
 
         std::array<std::array<std::vector<EntityID>, height/cellSize>, width/cellSize> cells;
@@ -31,6 +32,7 @@ namespace Crankhy{
         void updateEntity(EntityID entity);
         void removeEntity(EntityID entity);
 
+        std::pair<int, int> getIndexPos(TransformComponent& transform);
 
         std::vector<EntityID> getNeighbors(EntityID entity);
 

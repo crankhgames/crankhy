@@ -27,6 +27,7 @@ namespace Crankhy{
 
         sceneManager->registerScene("Main", std::make_shared<MainScene>());
         sceneManager->registerScene("Secondary", std::make_shared<SecondaryScene>());
+
     }
 
     void Game::run()
@@ -51,8 +52,11 @@ namespace Crankhy{
         debug::log("Components registered !");
         registerSystems();
         debug::log("Systems registered !");
+
+
         initializeEntities();
         debug::log("Entities intialized !");
+
 
         gameState = GameState::PLAY;
     }
@@ -103,10 +107,13 @@ namespace Crankhy{
         Uint64 deltaMilliseconds = SDL_GetTicks64() - frameStart;
         deltatime = deltaMilliseconds / 1000.0f;
         if (deltatime < 1.0f / FPS){
-            SDL_Delay(1000 / 60 - deltaMilliseconds);
+            SDL_Delay(1000 / FPS - deltaMilliseconds);
             deltatime = 1.0f / FPS;
         }
         debug::log("Framerate: ", 1/deltatime, " FPS");
+
+        TransformComponent& camTransform = ecs->getComponent<TransformComponent>(*cameraEntity);
+        debug::log("Camera pos: ", camTransform.position.x, "; ", camTransform.position.y);
 
 
         window->presentRender();
@@ -120,12 +127,15 @@ namespace Crankhy{
         ecs->registerComponent<MoveOnInputComponent>();
         ecs->registerComponent<ColliderComponent>();
         ecs->registerComponent<AnimationRendererComponent>();
+        ecs->registerComponent<CameraComponent>();
+        ecs->registerComponent<FollowComponent>();
     }
 
     void Game::registerSystems()
     {
         ecs->registerSystem<MoveOnInputSystem>();
         ecs->registerSystem<VelocitySystem>();
+        ecs->registerSystem<FollowSystem>();
         ecs->registerSystem<RenderSystem>();
         ecs->registerSystem<AnimationRendererSystem>();
         ecs->registerSystem<CollisionSystem>();

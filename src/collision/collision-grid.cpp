@@ -9,10 +9,10 @@ namespace Crankhy{
         ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
 
 
-        int xidx = transform.position.x / cellSize;
-        int yidx = transform.position.y / cellSize;
+        auto idxPos = getIndexPos(transform);
+        int xidx = idxPos.first;
+        int yidx = idxPos.second;
 
-        debug::log(xidx, "; ",yidx);
         
         cells[xidx][yidx].push_back(entity);
         collisionInfo.emplace(std::pair<EntityID, EntityCollisionInfo>(
@@ -28,8 +28,9 @@ namespace Crankhy{
     void Grid::removeEntity(EntityID entity){
         TransformComponent& transform = Game::get().getECS().getComponent<TransformComponent>(entity);
 
-        int xidx = transform.position.x / cellSize;
-        int yidx = transform.position.y / cellSize;
+        auto idxPos = getIndexPos(transform);
+        int xidx = idxPos.first;
+        int yidx = idxPos.second;
         
         auto it = std::find(cells[xidx][yidx].begin(), cells[xidx][yidx].end(), entity);
         
@@ -51,8 +52,9 @@ namespace Crankhy{
         
         TransformComponent& transform = Game::get().getECS().getComponent<TransformComponent>(entity);
 
-        int xidx = transform.position.x / cellSize;
-        int yidx = transform.position.y / cellSize;
+        auto idxPos = getIndexPos(transform);
+        int xidx = idxPos.first;
+        int yidx = idxPos.second;
 
         if (entColInfo.xidx != xidx || entColInfo.yidx != yidx){
 
@@ -70,6 +72,13 @@ namespace Crankhy{
             cells[xidx][yidx].push_back(entity);
         }
 
+    }
+
+    std::pair<int, int> Grid::getIndexPos(TransformComponent& transform){
+        return {
+            (transform.position.x + width / 2) / cellSize,
+            (transform.position.y + height / 2) / cellSize
+        };
     }
 
     std::vector<EntityID> Grid::getNeighbors(EntityID entity){

@@ -3,3 +3,4 @@
 #include "systems/velocity-system.h"
 #include "systems/collision-system.h"
 #include "systems/animationrenderer-system.h"
+#include "systems/follow-system.h"

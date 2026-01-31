@@ -3,6 +3,7 @@
 #include "ecs/ecs.h"
 #include <array>
 #include <unordered_map>
+#include "debug.h"
 
 #include <iostream>
 
@@ -60,6 +61,7 @@ namespace Crankhy {
         T &getComponent(EntityID entity)
         {
             // Checks if entity is present in entity pool
+            //debug::log("Finding component of type ", typeid(T).name(), "; ", entity);
             assert(entity2Component.find(entity) != entity2Component.end());
 
             ComponentID componentID = entity2Component[entity];

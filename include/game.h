@@ -4,6 +4,8 @@
 #include "window.h"
 #include "debug.h"
 
+#include "graphics/camera.h"
+
 #include "scene/scene.h"
 #include "scene/scene-manager.h"
 
@@ -21,10 +23,11 @@ namespace Crankhy{
         std::unique_ptr<Window> window;
         std::unique_ptr<ECSManager> ecs;
         std::unique_ptr<SceneManager> sceneManager;
+        EntityID* cameraEntity;
 
         GameState gameState;
 
-        const int FPS = 60;
+        const int FPS = 120;
         float deltatime = 0;
 
         void init();
@@ -56,5 +59,6 @@ namespace Crankhy{
         {
             return *ecs.get();
         }
+        EntityID &getCamera() {return *cameraEntity; }
     };
 }

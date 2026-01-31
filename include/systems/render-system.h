@@ -1,6 +1,7 @@
 #include "ecs/system.h"
 #include "scene/components.h"
 #include "game.h"
+#include "graphics/camera.h"
 
 // Game scripts / managers
 #include "graphics/texture-manager.h"
@@ -13,6 +14,7 @@
 
 namespace Crankhy{
         
+
     class RenderSystem : public System
     {
         public:
@@ -30,15 +32,15 @@ namespace Crankhy{
                     TransformComponent &transform = Game::get().getECS().getComponent<TransformComponent>(entity);
                     TextureRendererComponent &renderer = Game::get().getECS().getComponent<TextureRendererComponent>(entity);
 
-                    SDL_Rect dest;
-                    dest.h = (int)transform.scale.y;
-                    dest.w = (int)transform.scale.x;
-                    dest.x = (int)transform.position.x;
-                    dest.y = (int)transform.position.y;
+
+                    EntityID cameraEntity = Game::get().getCamera();
+                    TransformComponent& camTransform = Game::get().getECS().getComponent<TransformComponent>(cameraEntity);
+                    CameraComponent& camComponent = Game::get().getECS().getComponent<CameraComponent>(cameraEntity);
+                    //debug::log("Camera Entity: ", cameraEntity, "; ", "Rendered entity: ", entity);
 
                     //debug::log("Scale: ", transform.scale.x, "; ", transform.scale.y);
                     //debug::log("Rendering sprite of ", entity);
-                    draw(renderer.sprite, dest);
+                    draw(renderer.sprite, localToScreen(camTransform, camComponent, transform), renderer.flipX, renderer.flipY);
                 }
             }
         };
