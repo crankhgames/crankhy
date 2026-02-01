@@ -124,16 +124,7 @@ namespace Crankhy{
 
     bool hasStaticCollider(EntityID entity){
         ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
-
-        if (std::holds_alternative<RectColliderComponent>(collider)){
-            return std::get<RectColliderComponent>(collider).isStatic;
-        }
-        else if (std::holds_alternative<CircleColliderComponent>(collider)){
-            return std::get<CircleColliderComponent>(collider).isStatic;
-        }
-
-        debug::error("What type is this fucking collider ? Is this even a collider ?");
-        return false;
+        return collider.isStatic;
     }
 
 }

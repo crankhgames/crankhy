@@ -66,24 +66,21 @@ namespace Crankhy{
     };
 
 
-
-    struct CircleColliderComponent{
+    struct CircleCollisionInfo{
         float radius;
-        bool isStatic;
-
-        ColliderType type = ColliderType::Circle;
-
     };
-
-    struct RectColliderComponent{
+    struct RectCollisionInfo{
         Vector bounds;
-        bool isStatic;
-
-        ColliderType type = ColliderType::Rectangle;
-
     };
 
+    using ShapeCollisionInfo = std::variant<RectCollisionInfo, CircleCollisionInfo>;
 
-    using ColliderComponent = std::variant<RectColliderComponent, CircleColliderComponent>;
+    struct ColliderComponent{
+        ColliderType type;
+        bool isStatic;
+
+        ShapeCollisionInfo shapeInfo;
+    };
+
 
 }
