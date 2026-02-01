@@ -106,11 +106,13 @@ namespace Crankhy{
         );
 
         Game::get().getECS().addComponent<ColliderComponent>(player, 
-            RectColliderComponent{
-                .bounds = Vector(1, 1),
-                .isStatic = false
+            ColliderComponent{
+                .type = ColliderType::Rectangle,
+                .isStatic = true,
+                .shapeInfo = RectCollisionInfo{
+                    .bounds = Vector(1, 1)
+                }
             }
-
         );
 
         EntityID camEntity = Game::get().getCamera();

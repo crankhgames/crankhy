@@ -49,13 +49,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-<<<<<<< HEAD
-            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
-            RectColliderComponent& colliderB = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
-=======
             ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
             ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
->>>>>>> 42ac651 (Reworked collisions syntax)
 
             Vector boundsA = std::get<RectCollisionInfo>(colliderA.shapeInfo).bounds;
             Vector boundsB = std::get<RectCollisionInfo>(colliderB.shapeInfo).bounds;
@@ -81,13 +76,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-<<<<<<< HEAD
-            RectColliderComponent& colliderA = std::get<RectColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
-            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
-=======
             ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
             ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
->>>>>>> 42ac651 (Reworked collisions syntax)
 
             Vector bounds = std::get<RectCollisionInfo>(colliderA.shapeInfo).bounds;
             float radius = std::get<CircleCollisionInfo>(colliderB.shapeInfo).radius;
@@ -111,13 +101,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-<<<<<<< HEAD
-            CircleColliderComponent& colliderA = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityA));
-            CircleColliderComponent& colliderB = std::get<CircleColliderComponent>(Game::get().getECS().getComponent<ColliderComponent>(entityB));
-=======
             ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
             ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
->>>>>>> 42ac651 (Reworked collisions syntax)
 
             float distanceSquared = (transformA.position - transformB.position).lengthSquared();
             float sum_radii = std::get<CircleCollisionInfo>(colliderA.shapeInfo).radius + std::get<CircleCollisionInfo>(colliderB.shapeInfo).radius;
