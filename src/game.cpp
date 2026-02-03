@@ -26,7 +26,6 @@ namespace Crankhy{
         sceneManager = std::make_unique<SceneManager>();
 
         sceneManager->registerScene("Main", std::make_shared<MainScene>());
-        sceneManager->registerScene("Secondary", std::make_shared<SecondaryScene>());
 
     }
 
@@ -64,26 +63,17 @@ namespace Crankhy{
     void Game::handleEvent()
     {
         SDL_Event event;
-        SDL_PollEvent(&event);
+        
         switch (event.type)
         {
-        case SDL_MOUSEBUTTONDOWN:
-            break;
-        case SDL_MOUSEBUTTONUP:
-            break;
-        case SDL_KEYDOWN:
-            Input::setPressed(event.key.keysym.scancode);
-            break;
-        case SDL_KEYUP:
-            Input::setReleased(event.key.keysym.scancode);
-            break;
         case SDL_QUIT:
             gameState = GameState::EXIT;
             break;
         }
+    
+        SDL_PumpEvents();
     }
 
-    bool changeScene = false;
     void Game::loop()
     {
         Uint64 frameStart = SDL_GetTicks64();
@@ -95,14 +85,6 @@ namespace Crankhy{
         // Main logic
         ecs->tick(deltatime);
 
-        if (Input::getKeyState(SDL_SCANCODE_SPACE) && !changeScene){
-            changeScene = true;
-            sceneManager->loadScene("Secondary");
-        }
-        else if (!Input::getKeyState(SDL_SCANCODE_SPACE) && changeScene){
-            changeScene = false;
-            sceneManager->loadScene("Main");
-        }
 
         Uint64 deltaMilliseconds = SDL_GetTicks64() - frameStart;
         deltatime = deltaMilliseconds / 1000.0f;
@@ -129,6 +111,7 @@ namespace Crankhy{
         ecs->registerComponent<AnimationRendererComponent>();
         ecs->registerComponent<CameraComponent>();
         ecs->registerComponent<FollowComponent>();
+        ecs->registerComponent<ShooterComponent>();
     }
 
     void Game::registerSystems()
@@ -138,6 +121,7 @@ namespace Crankhy{
         ecs->registerSystem<FollowSystem>();
         ecs->registerSystem<RenderSystem>();
         ecs->registerSystem<AnimationRendererSystem>();
+        ecs->registerSystem<BulletSystem>();
         ecs->registerSystem<CollisionSystem>();
     }
 

@@ -49,8 +49,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
-            ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
+            ColliderComponent& colliderA = Game::get().getECS().getComponent<ColliderComponent>(entityA);
+            ColliderComponent& colliderB = Game::get().getECS().getComponent<ColliderComponent>(entityB);
 
             Vector boundsA = std::get<RectCollisionInfo>(colliderA.shapeInfo).bounds;
             Vector boundsB = std::get<RectCollisionInfo>(colliderB.shapeInfo).bounds;
@@ -76,8 +76,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
-            ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
+            ColliderComponent& colliderA = Game::get().getECS().getComponent<ColliderComponent>(entityA);
+            ColliderComponent& colliderB = Game::get().getECS().getComponent<ColliderComponent>(entityB);
 
             Vector bounds = std::get<RectCollisionInfo>(colliderA.shapeInfo).bounds;
             float radius = std::get<CircleCollisionInfo>(colliderB.shapeInfo).radius;
@@ -101,8 +101,8 @@ namespace Crankhy{
             TransformComponent& transformA = Game::get().getECS().getComponent<TransformComponent>(entityA);
             TransformComponent& transformB = Game::get().getECS().getComponent<TransformComponent>(entityB);
 
-            ColliderComponent& colliderA = Game::get().getECSManager().getComponent<ColliderComponent>(entityA);
-            ColliderComponent& colliderB = Game::get().getECSManager().getComponent<ColliderComponent>(entityB);
+            ColliderComponent& colliderA = Game::get().getECS().getComponent<ColliderComponent>(entityA);
+            ColliderComponent& colliderB = Game::get().getECS().getComponent<ColliderComponent>(entityB);
 
             float distanceSquared = (transformA.position - transformB.position).lengthSquared();
             float sum_radii = std::get<CircleCollisionInfo>(colliderA.shapeInfo).radius + std::get<CircleCollisionInfo>(colliderB.shapeInfo).radius;
@@ -134,7 +134,75 @@ namespace Crankhy{
                         continue;
                     }
                     if (isColliding(entity, other)){
-                        debug::log(SDL_GetTicks(), " Collision !");
+                        
+                        ColliderComponent& colliderEntity = Game::get().getECS().getComponent<ColliderComponent>(entity);
+                        TransformComponent& transformEntity = Game::get().getECS().getComponent<TransformComponent>(entity);
+
+
+                        TransformComponent& transformOther = Game::get().getECS().getComponent<TransformComponent>(other);
+                        ColliderComponent& colliderOther = Game::get().getECS().getComponent<ColliderComponent>(other);
+
+                        if (colliderEntity.type == ColliderType::Rectangle && colliderOther.type == ColliderType::Rectangle){
+                                
+                            Vector boundsA = std::get<RectCollisionInfo>(colliderEntity.shapeInfo).bounds;
+                            Vector boundsB = std::get<RectCollisionInfo>(colliderOther.shapeInfo).bounds;
+
+                            float leftA = transformEntity.position.x;
+                            float rightA = transformEntity.position.x + boundsA.x;
+                            float topA = transformEntity.position.y;
+                            float bottomA = transformEntity.position.y + boundsA.y;
+
+                            float leftB = transformOther.position.x;
+                            float rightB = transformOther.position.x + boundsB.x;
+                            float topB = transformOther.position.y;
+                            float bottomB = transformOther.position.y + boundsB.y;
+
+                            debug::log("Nodes : ", SDL_min(SDL_fabsf(leftA - rightB), SDL_fabsf(leftB - rightA)) > SDL_min(SDL_fabsf(topA - bottomB), SDL_fabsf(bottomA - topB)));
+                            if (SDL_min(SDL_fabsf(leftA - rightB), SDL_fabsf(leftB - rightA)) > SDL_min(SDL_fabsf(topA - bottomB), SDL_fabsf(bottomA - topB))){
+                                if (SDL_fabsf(topA - bottomB) < SDL_fabsf(topB - bottomA)){
+                                    if (!colliderEntity.isStatic){
+                                        transformEntity.position.y -= topA - bottomB;
+                                    }
+                                    else{
+                                        transformOther.position.y += topA - bottomB;
+                                    }
+                                }
+                                else{
+                                    if  (!colliderEntity.isStatic){
+                                        transformEntity.position.y -= bottomA - topB;
+                                    }
+                                    else{
+                                        transformOther.position.y += bottomA - topB;
+                                    }
+                                }
+                            }
+                            else{
+                                if (SDL_fabsf(leftA - rightB) < SDL_fabsf(leftB - rightA)){
+                                    if (!colliderEntity.isStatic){
+                                        transformEntity.position.x += rightB - leftA;
+                                    }
+                                    else{
+                                        transformOther.position.x -= rightB - leftA;
+
+                                    }
+                                }
+                                else{
+
+                                    if (!colliderEntity.isStatic){
+
+                                        transformEntity.position.x += leftB - rightA;
+                                    }
+                                    else{
+                                        transformOther.position.x -= leftB - rightA;
+
+                                    }
+                                }
+                            }
+
+                        }
+
+                                               
+                        
                     }
                 }
 

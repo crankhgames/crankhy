@@ -29,7 +29,7 @@ namespace Crankhy{
         Game::get().getECS().addComponent<ColliderComponent>(block, 
             ColliderComponent {
                 .type=ColliderType::Rectangle,
-                .isStatic = false,
+                .isStatic = true,
                 .shapeInfo=RectCollisionInfo{
                     .bounds=Vector(size*2, size*2)
                 },
@@ -105,6 +105,13 @@ namespace Crankhy{
             }
         );
 
+        Game::get().getECS().addComponent(player, 
+            ShooterComponent{
+                .bulletSpeed=1.0f,
+                .delayBtwShots=0.4f
+            }
+        );
+
         Game::get().getECS().addComponent<ColliderComponent>(player, 
             ColliderComponent{
                 .type = ColliderType::Rectangle,
@@ -138,53 +145,4 @@ namespace Crankhy{
 
     }
 
-    void SecondaryScene::initializeEntities(){
-        EntityID& cam = Game::get().getCamera();
-        cam = Game::get().getECS().createEntity();
-
-        EntityID camEntity = Game::get().getCamera();
-
-        Game::get().getECS().addComponent(camEntity, 
-            TransformComponent{
-                .position=Vector(0, 0)
-            }
-        );
-
-        Game::get().getECS().addComponent(camEntity, 
-            CameraComponent{
-                Vector(100, 100)
-            }
-        );
-        EntityID player = Game::get().getECS().createEntity();
-
-        Game::get().getECS().addComponent(player, 
-            TransformComponent{
-                .position = Vector(400, 300),
-                .scale = Vector(1, 1)
-            }
-        );
-
-
-        Game::get().getECS().addComponent(player, 
-            TextureRendererComponent{
-                .sprite = new Spritesheet("assets/sprites/logo.png", 1, 1)
-            }
-        );
-
-        Game::get().getECS().addComponent(player, 
-            VelocityComponent{
-                .velocity = Vector()
-            }
-        );
-
-        Game::get().getECS().addComponent(player, 
-            MoveOnInputComponent{
-                .up = SDL_SCANCODE_W,
-                .down = SDL_SCANCODE_S,
-                .left = SDL_SCANCODE_A,
-                .right = SDL_SCANCODE_D
-            }
-        );
-       
-    }
 }

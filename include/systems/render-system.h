@@ -40,7 +40,10 @@ namespace Crankhy{
 
                     //debug::log("Scale: ", transform.scale.x, "; ", transform.scale.y);
                     //debug::log("Rendering sprite of ", entity);
-                    draw(renderer.sprite, localToScreen(camTransform, camComponent, transform), renderer.flipX, renderer.flipY);
+                    SDL_Rect position = localToScreen(camTransform, camComponent, transform);
+                    draw(renderer.sprite, position, renderer.flipX, renderer.flipY);
+                    SDL_SetRenderDrawColor(Game::get().getWindow().renderer, 255, 0, 0, 255);
+                    SDL_RenderDrawRect(Game::get().getWindow().renderer, &position);
                 }
             }
         };

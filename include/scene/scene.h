@@ -18,9 +18,4 @@ namespace Crankhy{
     public:
         void initializeEntities() override;
     };
-
-    class SecondaryScene : public Scene{
-    public:
-        void initializeEntities() override;
-    };
 }

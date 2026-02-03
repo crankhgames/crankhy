@@ -1,15 +1,17 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include <bitset>
+#include "math/vector.h"
 
 namespace Crankhy{
 
     namespace Input{
 
-        void setPressed(SDL_Scancode scancode);
-        void setReleased(SDL_Scancode scancode);
-        bool getKeyState(SDL_Scancode scancode);
 
-        extern std::bitset<SDL_NUM_SCANCODES> keys;
+        bool getKeyState(SDL_Scancode scancode);
+        bool getMouseState(Uint8 button);
+        Vector getScreenMousePosition();
+
+        extern const Uint8* keys;
     }
 }

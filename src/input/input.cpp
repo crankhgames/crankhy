@@ -5,22 +5,21 @@ namespace Crankhy {
 
     namespace Input{
 
-        void setPressed(SDL_Scancode scancode)
-        {
-            keys[scancode] = true;
-        }
-
-        void setReleased(SDL_Scancode scancode)
-        {
-            keys[scancode] = false;
-        }
-
-        bool getKeyState(SDL_Scancode scancode)
-        {
+        bool getKeyState(SDL_Scancode scancode) {
             return keys[scancode];
         }
 
-        std::bitset<SDL_NUM_SCANCODES> keys;
+        bool getMouseState(Uint8 button){
+            return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(button);
+        }
+
+        Vector getScreenMousePosition(){
+            int x,y;
+            SDL_GetMouseState(&x, &y);
+            return Vector(x, y);
+        }
+
+        const Uint8 * keys = SDL_GetKeyboardState(NULL);
     }
 
 }

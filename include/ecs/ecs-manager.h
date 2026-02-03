@@ -32,7 +32,6 @@ namespace Crankhy {
         void addComponent(EntityID entity, T component)
         {
 
-            debug::log("Type: ", typeid(T).name());
             // Add component to component array through component manager
             componentManager->addComponent<T>(entity, component);
 

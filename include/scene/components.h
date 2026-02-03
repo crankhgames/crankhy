@@ -59,6 +59,13 @@ namespace Crankhy{
         Vector pixelsToUnit;
     };
 
+    struct ShooterComponent{
+        float bulletSpeed;
+        float delayBtwShots;
+        float counter;
+    };
+
+
     enum class ColliderType{
         None,
         Rectangle,
@@ -77,6 +84,7 @@ namespace Crankhy{
 
     struct ColliderComponent{
         ColliderType type;
+        //std::string tag;
         bool isStatic;
         ShapeCollisionInfo shapeInfo;
     };

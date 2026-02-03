@@ -7,6 +7,7 @@
 namespace Crankhy{
 
 
+Vector screenToLocal(TransformComponent& cameraTransform, CameraComponent& camera, Vector& vector);
 SDL_Rect localToScreen(TransformComponent& cameraTransform, CameraComponent& camera, TransformComponent& transform);
 
 }
