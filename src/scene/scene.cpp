@@ -9,7 +9,7 @@ namespace Crankhy{
 
         EntityID block = Game::get().getECS().createEntity();
 
-        float size = .5f;
+        float size = 1.0f;
 
         Game::get().getECS().addComponent(block, 
             TransformComponent{
@@ -24,11 +24,12 @@ namespace Crankhy{
             }
         );
 
-        Game::get().getECS().getComponent<TextureRendererComponent>(block).sprite->changeSprite(5);
+        Game::get().getECS().getComponent<TextureRendererComponent>(block).sprite->changeSprite(4);
 
         Game::get().getECS().addComponent<ColliderComponent>(block, 
             ColliderComponent {
                 .type=ColliderType::Rectangle,
+                .layer=CollisionLayer::LAYER_BLOCK,
                 .isStatic = true,
                 .shapeInfo=RectCollisionInfo{
                     .bounds=Vector(size*2, size*2)
@@ -43,14 +44,40 @@ namespace Crankhy{
         EntityID& cam = Game::get().getCamera();
         cam = Game::get().getECS().createEntity();
 
-        for (int i = 0; i < 10; i++){
-            spawnBlock(i, 0);
-            spawnBlock(i, 5);
+        //EntityID ball = Game::get().getECS().createEntity();
+
+        //Game::get().getECS().addComponent(ball, 
+            //TransformComponent{
+                //.position = Vector(5, 5),
+                //.scale= Vector(0, 0),
+            //}
+        //);
+        //Game::get().getECS().addComponent(ball, 
+            //ColliderComponent {
+                //.type=ColliderType::Circle,
+                //.layer=CollisionLayer::LAYER_NONE,
+                //.isStatic = false,
+                //.hasPhysicalPresence = false,
+                //.shapeInfo=CircleCollisionInfo{
+                    //.radius=10
+                //},
+
+            //}
+        //);
+
+        for (int i = 0; i < 4; i++){
+            spawnBlock(i*2, 0);
+            spawnBlock(i*2, 5*2);
+        }
+
+        for (int i = 6; i < 10; i++){
+            spawnBlock(i*2, 0);
+            spawnBlock(i*2, 5*2);
         }
 
         for (int i = 0; i < 6; i++){
-            spawnBlock(-1, i);
-            spawnBlock(10, i);
+            spawnBlock(-1*2, i*2);
+            spawnBlock(10*2, i*2);
         }
 
         EntityID player = Game::get().getECS().createEntity();
@@ -81,9 +108,11 @@ namespace Crankhy{
         Game::get().getECS().addComponent<ColliderComponent>(player, 
             ColliderComponent {
                 .type=ColliderType::Rectangle,
+                .layer=CollisionLayer::LAYER_PLAYER,
                 .isStatic = false,
+                .offset = Vector(.2f, .05f),
                 .shapeInfo=RectCollisionInfo{
-                    .bounds=Vector(50, 50)
+                    .bounds=Vector(.5f, .9f)
                 },
 
             }
@@ -107,20 +136,11 @@ namespace Crankhy{
 
         Game::get().getECS().addComponent(player, 
             ShooterComponent{
-                .bulletSpeed=1.0f,
+                .bulletSpeed=3.0f,
                 .delayBtwShots=0.4f
             }
         );
 
-        Game::get().getECS().addComponent<ColliderComponent>(player, 
-            ColliderComponent{
-                .type = ColliderType::Rectangle,
-                .isStatic = true,
-                .shapeInfo = RectCollisionInfo{
-                    .bounds = Vector(1, 1)
-                }
-            }
-        );
 
         EntityID camEntity = Game::get().getCamera();
 
@@ -130,16 +150,17 @@ namespace Crankhy{
             }
         );
 
+        float pixelsToUnitCam = 100;
         Game::get().getECS().addComponent(camEntity, 
             CameraComponent{
-                Vector(100, 100)
+                Vector(pixelsToUnitCam, pixelsToUnitCam)
             }
         );
 
         Game::get().getECS().addComponent(camEntity, 
             FollowComponent{
                 .followedTransform = &Game::get().getECS().getComponent<TransformComponent>(player),
-                .offset = Vector(-3.5, -2.5)
+                .offset = Vector(-Game::get().getWindow().width / (2 * pixelsToUnitCam), -Game::get().getWindow().height / (2 * pixelsToUnitCam)) // Centering player on center of screen
             }
         );
 

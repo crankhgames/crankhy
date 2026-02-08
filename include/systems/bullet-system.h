@@ -43,15 +43,15 @@ namespace Crankhy{
                     
                     Game::get().getECS().addComponent(bullet,
                         TransformComponent{
-                            .position = transform.position,
-                            .scale = Vector(.2f, .2f)
+                            .position = transform.position + transform.scale/2.f,
+                            .scale = Vector(.6f, .6f)
                         }
                     );
 
                     TransformComponent& camTransform = Game::get().getECS().getComponent<TransformComponent>(Game::get().getCamera());
                     CameraComponent& cam = Game::get().getECS().getComponent<CameraComponent>(Game::get().getCamera());
                     Vector mousePosition = Input::getScreenMousePosition();
-                    Vector bulletVel = screenToLocal(camTransform, cam, mousePosition) - transform.position;
+                    Vector bulletVel = screenToLocal(camTransform, cam, mousePosition) - (transform.position + transform.scale / 2);
 
                     Game::get().getECS().addComponent(bullet,
                         VelocityComponent{
@@ -66,11 +66,18 @@ namespace Crankhy{
                     );
 
                     Game::get().getECS().addComponent(bullet,
+                        LifetimeComponent{
+                            .totalLifetime=10.0f
+                        }
+                    );
+
+                    Game::get().getECS().addComponent(bullet,
                         ColliderComponent{
-                            .type = ColliderType::Rectangle,
+                            .type = ColliderType::Circle,
+                            .layer = CollisionLayer::LAYER_BULLET,
                             .isStatic = false,
-                            .shapeInfo = RectCollisionInfo{
-                                .bounds = Vector(0.2f, 0.2f)
+                            .shapeInfo = CircleCollisionInfo{
+                                .radius=.3f
                             }
                         }
                     );

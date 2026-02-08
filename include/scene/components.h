@@ -6,6 +6,7 @@
 
 #include <variant>
 #include <memory>
+#include <string>
 
 namespace Crankhy{
 
@@ -66,6 +67,12 @@ namespace Crankhy{
     };
 
 
+    struct LifetimeComponent{
+        float totalLifetime;
+        float counter = 0.f;
+    };
+
+
     enum class ColliderType{
         None,
         Rectangle,
@@ -82,10 +89,19 @@ namespace Crankhy{
 
     using ShapeCollisionInfo = std::variant<CircleCollisionInfo, RectCollisionInfo>;
 
+    enum class CollisionLayer{
+        LAYER_NONE,
+        LAYER_PLAYER,
+        LAYER_BULLET,
+        LAYER_BLOCK
+    };
+
     struct ColliderComponent{
         ColliderType type;
-        //std::string tag;
-        bool isStatic;
+        CollisionLayer layer;
+        bool isStatic=false;
+        bool hasPhysicalPresence=true;
+        Vector offset;
         ShapeCollisionInfo shapeInfo;
     };
 }

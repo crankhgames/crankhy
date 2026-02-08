@@ -12,8 +12,8 @@ namespace Crankhy {
         const char *title = "Err0r Demo";
 
         // Dimensions of the window
-        const int width = 800;
-        const int height = 600;
+        const int width = 1920;
+        const int height = 1080;
 
         const bool isFullscreen = false;
 

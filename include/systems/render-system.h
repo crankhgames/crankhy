@@ -42,8 +42,6 @@ namespace Crankhy{
                     //debug::log("Rendering sprite of ", entity);
                     SDL_Rect position = localToScreen(camTransform, camComponent, transform);
                     draw(renderer.sprite, position, renderer.flipX, renderer.flipY);
-                    SDL_SetRenderDrawColor(Game::get().getWindow().renderer, 255, 0, 0, 255);
-                    SDL_RenderDrawRect(Game::get().getWindow().renderer, &position);
                 }
             }
         };

@@ -63,6 +63,7 @@ namespace Crankhy{
     void Game::handleEvent()
     {
         SDL_Event event;
+        SDL_PollEvent(&event);
         
         switch (event.type)
         {
@@ -112,6 +113,7 @@ namespace Crankhy{
         ecs->registerComponent<CameraComponent>();
         ecs->registerComponent<FollowComponent>();
         ecs->registerComponent<ShooterComponent>();
+        ecs->registerComponent<LifetimeComponent>();
     }
 
     void Game::registerSystems()
@@ -119,9 +121,10 @@ namespace Crankhy{
         ecs->registerSystem<MoveOnInputSystem>();
         ecs->registerSystem<VelocitySystem>();
         ecs->registerSystem<FollowSystem>();
-        ecs->registerSystem<RenderSystem>();
         ecs->registerSystem<AnimationRendererSystem>();
         ecs->registerSystem<BulletSystem>();
+        ecs->registerSystem<LifetimeSystem>();
+        ecs->registerSystem<RenderSystem>();
         ecs->registerSystem<CollisionSystem>();
     }
 

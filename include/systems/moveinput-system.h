@@ -68,6 +68,10 @@ namespace Crankhy{
                 }
                 eVelocity.velocity = dir.normal() * SPEED;
 
+                if (Input::getKeyState(SDL_SCANCODE_SPACE)){
+                    eVelocity.velocity *= 4.0f;
+                }
+
             }
         }
     };

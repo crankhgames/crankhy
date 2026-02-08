@@ -5,3 +5,4 @@
 #include "systems/animationrenderer-system.h"
 #include "systems/follow-system.h"
 #include "systems/bullet-system.h"
+#include "systems/lifetime-system.h"
