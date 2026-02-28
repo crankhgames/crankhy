@@ -73,9 +73,21 @@ namespace Crankhy{
          * @param component component of type T
          */
         template <typename T>
-        void addComponent(EntityID entity, T component)
+        void addComponent(EntityID entity, const T& component)
         {
             getComponentArray<T>()->addComponent(entity, component);
+        }
+
+        /**
+         * @brief Adds a new component to an entity based on it's id
+         * @tparam T component type
+         * @param entity entity's id
+         * @param component component of type T
+         */
+        template <typename T>
+        void addComponent(EntityID entity, T&& component)
+        {
+            getComponentArray<T>()->addComponent(entity, std::move(component));
         }
 
         /**

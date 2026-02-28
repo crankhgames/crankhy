@@ -13,22 +13,74 @@
 
 #include "debug.h"
 
-namespace Crankhy{ 
+#include <thread>
 
+#define NUM_THREADS 8
+
+
+namespace Crankhy{ 
+    // kudos to this lovely fella https://gist.github.com/Gumichan01/332c26f6197a432db91cc4327fcabb1c
+    int SDL_RenderDrawCircle(SDL_Renderer * renderer, int x, int y, int radius)
+    {
+        int offsetx, offsety, d;
+        int status;
+
+
+        offsetx = 0;
+        offsety = radius;
+        d = radius -1;
+        status = 0;
+
+        while (offsety >= offsetx) {
+            status += SDL_RenderDrawPoint(renderer, x + offsetx, y + offsety);
+            status += SDL_RenderDrawPoint(renderer, x + offsety, y + offsetx);
+            status += SDL_RenderDrawPoint(renderer, x - offsetx, y + offsety);
+            status += SDL_RenderDrawPoint(renderer, x - offsety, y + offsetx);
+            status += SDL_RenderDrawPoint(renderer, x + offsetx, y - offsety);
+            status += SDL_RenderDrawPoint(renderer, x + offsety, y - offsetx);
+            status += SDL_RenderDrawPoint(renderer, x - offsetx, y - offsety);
+            status += SDL_RenderDrawPoint(renderer, x - offsety, y - offsetx);
+
+            if (status < 0) {
+                status = -1;
+                break;
+            }
+
+            if (d >= 2*offsetx) {
+                d -= 2*offsetx + 1;
+                offsetx +=1;
+            }
+            else if (d < 2 * (radius - offsety)) {
+                d += 2 * offsety - 1;
+                offsety -= 1;
+            }
+            else {
+                d += 2 * (offsety - offsetx - 1);
+                offsety -= 1;
+                offsetx += 1;
+            }
+        }
+
+        return status;
+    }
+
+    class CollisionSystem;
+    void handleCollisions(int index, CollisionSystem* collisionSys);
 
     class CollisionSystem : public System
     {
     private:
         std::unordered_map<EntityID, ColliderType> colliderTypes;
-        bool collisionLayerMatrix[4][4] = {
-            {true, true, true, true},
-            {true, true, false, true},
-            {true, false, true, true},
-            {true, true, true, true},
+        bool collisionLayerMatrix[5][5] = {
+            {true, true, true, true, true},
+            {true, true, false, true, false},
+            {true, false, true, true, true},
+            {true, true, true, true, true},
+            {true, false, true, true, true},
         };
-        Grid grid;
 
     public:
+        Grid grid;
         CollisionSystem()
         {
             Game::get().getECS().addType2Bitset<TransformComponent>(systemBitset);
@@ -177,8 +229,8 @@ namespace Crankhy{
             if (colliderA.hasPhysicalPresence && colliderB.hasPhysicalPresence){
                 Vector diff = closestPoint - (transformB.position + Vector(radius, radius) + colliderB.offset);
                 if (!colliderA.isStatic && !colliderB.isStatic){
-                    transformA.position -= diff.normal() * (radius - diff.length()) / 2;
-                    transformB.position += diff.normal() * (radius - diff.length()) / 2;
+                    transformA.position += diff.normal() * (radius - diff.length()) / 2;
+                    transformB.position -= diff.normal() * (radius - diff.length()) / 2;
                 }
                 else if (!colliderA.isStatic){
                     transformA.position += diff.normal() * (radius - diff.length());
@@ -246,44 +298,81 @@ namespace Crankhy{
             grid.removeEntity(entity);
         }
 
+
         void tick(float deltaTime) override
         {
-            for (EntityID entity : entities)
-            {
+
+            //EntityID cameraEntity = Game::get().getCamera();
+            //TransformComponent& camTransform = Game::get().getECS().getComponent<TransformComponent>(cameraEntity);
+            //CameraComponent& camComponent = Game::get().getECS().getComponent<CameraComponent>(cameraEntity);
+
+            //SDL_Renderer* rend = Game::get().getWindow().renderer;
+            //SDL_SetRenderDrawColor(rend, 0, 255, 0, 255);
+            
+            //for (int k = 0; k < Grid::width / Grid::cellSize; k++){
+                //float w = -Grid::width/2 + Grid::cellSize*k;
+                //int screenw = (int)((w - camTransform.position.x) *camComponent.pixelsToUnit.x);
+                //float h = -Grid::height/2 + Grid::cellSize*k;
+                //int screenh = (int)((h - camTransform.position.y) *camComponent.pixelsToUnit.y);
+                //SDL_RenderDrawLine(rend, screenw, 0, screenw, 1080);
+                //SDL_RenderDrawLine(rend, 0, screenh, 1920, screenh);
+            //}
+
+            for (const EntityID entity : entities){
+                ColliderComponent& colliderEntity = Game::get().getECS().getComponent<ColliderComponent>(entity);
+                colliderEntity.collidedEntities.clear();
+            }
+
+
+            for (const EntityID& entity : entities){
+
                 grid.updateEntity(entity);
                 std::vector<EntityID> others = grid.getNeighbors(entity);
 
                 ColliderComponent& colliderEntity = Game::get().getECS().getComponent<ColliderComponent>(entity);
-                TransformComponent& transformEntity = Game::get().getECS().getComponent<TransformComponent>(entity);
+                //TransformComponent& transformEntity = Game::get().getECS().getComponent<TransformComponent>(entity);
 
-                if (colliderEntity.type == ColliderType::Rectangle){
+                //SDL_Rect pos = localToScreen(camTransform, camComponent, transformEntity);
+                
 
-                    Vector boundsA = std::get<RectCollisionInfo>(colliderEntity.shapeInfo).bounds;
+                //if (colliderEntity.type == ColliderType::Rectangle){
+                    //Vector boundsA = std::get<RectCollisionInfo>(colliderEntity.shapeInfo).bounds;
 
-                    EntityID cameraEntity = Game::get().getCamera();
-                    TransformComponent& camTransform = Game::get().getECS().getComponent<TransformComponent>(cameraEntity);
-                    CameraComponent& camComponent = Game::get().getECS().getComponent<CameraComponent>(cameraEntity);
-                    SDL_Rect pos = localToScreen(camTransform, camComponent, transformEntity);
-                    pos.x += colliderEntity.offset.x * camComponent.pixelsToUnit.x;
-                    pos.y += colliderEntity.offset.y * camComponent.pixelsToUnit.y;
-                    pos.w = boundsA.x * camComponent.pixelsToUnit.x;
-                    pos.h = boundsA.y * camComponent.pixelsToUnit.y;
 
-                    SDL_SetRenderDrawColor(Game::get().getWindow().renderer, 255, 0, 0, 255);
-                    SDL_RenderDrawRect(Game::get().getWindow().renderer, &pos);
+                    //pos.x += colliderEntity.offset.x * camComponent.pixelsToUnit.x;
+                    //pos.y += colliderEntity.offset.y * camComponent.pixelsToUnit.y;
+                    //pos.w = boundsA.x * camComponent.pixelsToUnit.x;
+                    //pos.h = boundsA.y * camComponent.pixelsToUnit.y;
 
-                }
-                for (EntityID other : others){
+                    //SDL_SetRenderDrawColor(Game::get().getWindow().renderer, 255, 0, 0, 255);
+                    //SDL_RenderDrawRect(Game::get().getWindow().renderer, &pos);
+
+                //}
+                //else{
+
+                    //float rad = std::get<CircleCollisionInfo>(colliderEntity.shapeInfo).radius;
+                    //pos.x += (colliderEntity.offset.x + rad) * camComponent.pixelsToUnit.x;
+                    //pos.y += (colliderEntity.offset.y+ rad) * camComponent.pixelsToUnit.y;
+                    //SDL_SetRenderDrawColor(Game::get().getWindow().renderer, 255, 0, 0, 255);
+                    //SDL_RenderDrawCircle(Game::get().getWindow().renderer, pos.x, pos.y, rad*camComponent.pixelsToUnit.x);
+                //}
+
+                for (const EntityID& other : others){
                     if (entity >= other){
                         continue;
                     }
                     if (isColliding(entity, other)){
                         
-                        debug::log("Handling collisions between ", entity, " & ", other, "!");
+                        ColliderComponent& colliderOther =  Game::get().getECS().getComponent<ColliderComponent>(other);
+                        colliderEntity.collidedEntities.push_back(other);
+                        colliderOther.collidedEntities.push_back(entity);
                     }
                 }
 
             }
+
+
+
         }
     };
 

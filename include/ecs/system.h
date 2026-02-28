@@ -8,10 +8,10 @@ namespace Crankhy {
     class System
     {
     protected:
-        std::set<EntityID> entities;
         ComponentBitset systemBitset;
 
     public:
+        std::vector<EntityID> entities;
         virtual void tick(float deltaTime) = 0;
         virtual void addEntity(EntityID entity);
         bool hasEntity(EntityID entity);

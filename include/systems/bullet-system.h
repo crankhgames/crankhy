@@ -67,7 +67,7 @@ namespace Crankhy{
 
                     Game::get().getECS().addComponent(bullet,
                         LifetimeComponent{
-                            .totalLifetime=10.0f
+                            .totalLifetime=1.0f
                         }
                     );
 

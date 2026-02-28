@@ -6,6 +6,7 @@
 
 #include "scene/components.h"
 #include "systems/systems.h"
+#include "graphics/tilemap.h"
 
 
 #include "debug.h"
@@ -15,6 +16,7 @@
 namespace Crankhy{
 
     Game *Game::Instance = nullptr;
+    Tilemap<5, 5> tilemap;
     Game::Game()
     {
         if (Instance == nullptr)
@@ -55,6 +57,19 @@ namespace Crankhy{
 
         initializeEntities();
         debug::log("Entities intialized !");
+
+        tilemap = Tilemap<5, 5>{
+            .position = Vector(0.f, 0.f),
+            .tiles = {
+                {1, 0, 0, 2, 2},
+                {2, 0, 0, 3, 3},
+                {1, 0, 0, 2, 2},
+                {1, 0, 0, 4, 4},
+                {5, 3, 0, 2, 2},
+            },
+            .cellSize = 1.f,
+            .spritesheet = new Spritesheet("assets/sprites/SchematicSprite.png", 32, 32)
+        };
 
 
         gameState = GameState::PLAY;
@@ -97,6 +112,9 @@ namespace Crankhy{
 
         TransformComponent& camTransform = ecs->getComponent<TransformComponent>(*cameraEntity);
         debug::log("Camera pos: ", camTransform.position.x, "; ", camTransform.position.y);
+        draw_tilemap<5, 5>(&tilemap);
+
+        ecs->print();
 
 
         window->presentRender();
@@ -114,18 +132,28 @@ namespace Crankhy{
         ecs->registerComponent<FollowComponent>();
         ecs->registerComponent<ShooterComponent>();
         ecs->registerComponent<LifetimeComponent>();
+        ecs->registerComponent<FollowBehaviourComponent>();
+        ecs->registerComponent<SpawnerComponent>();
     }
 
     void Game::registerSystems()
     {
+        //ecs->registerSystem<FaceInVelocitySystem>();
         ecs->registerSystem<MoveOnInputSystem>();
-        ecs->registerSystem<VelocitySystem>();
-        ecs->registerSystem<FollowSystem>();
-        ecs->registerSystem<AnimationRendererSystem>();
         ecs->registerSystem<BulletSystem>();
-        ecs->registerSystem<LifetimeSystem>();
-        ecs->registerSystem<RenderSystem>();
+        ecs->registerSystem<SpawnSystem>();
+        ecs->registerSystem<FollowBehaviourSystem>();
+        ecs->registerSystem<VelocitySystem>();
+
         ecs->registerSystem<CollisionSystem>();
+
+        //ecs->registerSystem<BulletCollisionSystem>();
+        ecs->registerSystem<LifetimeSystem>();
+
+        // Rendering
+        ecs->registerSystem<AnchorTransformSystem>();
+        ecs->registerSystem<AnimationRendererSystem>();
+        ecs->registerSystem<RenderSystem>();
     }
 
     void Game::initializeEntities()

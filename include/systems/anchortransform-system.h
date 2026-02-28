@@ -13,10 +13,10 @@
 
 namespace Crankhy{
 
-    class FollowSystem : public System
+    class AnchorTransformSystem : public System
     {
     public:
-        FollowSystem()
+        AnchorTransformSystem()
         {
             Game::get().getECS().addType2Bitset<TransformComponent>(systemBitset);
             Game::get().getECS().addType2Bitset<FollowComponent>(systemBitset);

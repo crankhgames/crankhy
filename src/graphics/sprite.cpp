@@ -31,14 +31,14 @@ namespace Crankhy {
     }
     
     void Spritesheet::changeSprite(int spriteIndex){
-        debug::log("Current Sprite Index: ", currentSpriteIndex);
+        //debug::log("Current Sprite Index: ", currentSpriteIndex);
         if (currentSpriteIndex == spriteIndex){
             return;
         }
 
         srcRect.x = (spriteIndex % numberOfSpritesX) * srcRect.w;
         srcRect.y = (spriteIndex / numberOfSpritesX) * srcRect.h;
-        debug::log("SRC rect x: ", srcRect.x, "; SRC rect y: ", srcRect.y);
+        //debug::log("SRC rect x: ", srcRect.x, "; SRC rect y: ", srcRect.y);
         currentSpriteIndex = spriteIndex;
     }
 }

@@ -41,4 +41,10 @@ void ECSManager::clearEntities(){
     entityManager->clearEntities();
 }
 
+void ECSManager::print(){
+    debug::log("ECS info: ");
+    debug::log("Entity Count: ", entityManager->getEntityCount());
+    debug::log("Component registered: ", componentManager->getComponentTypeCount());
+}
+
 }

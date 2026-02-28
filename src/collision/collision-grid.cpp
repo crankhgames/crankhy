@@ -19,7 +19,7 @@ namespace Crankhy{
             entity,
             EntityCollisionInfo {
                 xidx, yidx,
-                false
+                collider.isStatic
             }
         ));
 
@@ -122,9 +122,5 @@ namespace Crankhy{
         return result;
     }
 
-    bool hasStaticCollider(EntityID entity){
-        ColliderComponent& collider = Game::get().getECS().getComponent<ColliderComponent>(entity);
-        return collider.isStatic;
-    }
 
 }

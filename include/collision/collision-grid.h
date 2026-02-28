@@ -16,15 +16,12 @@ namespace Crankhy{
     };
 
     class Grid{
-    private:
+    public:
+
         static const int width = 100;
         static const int height = 100;
-        static const int cellSize = 100;
+        static const int cellSize = 2; 
 
-        std::array<std::array<std::vector<EntityID>, height/cellSize>, width/cellSize> cells;
-        std::unordered_map<EntityID, EntityCollisionInfo> collisionInfo;
-        
-    public:
         Grid() = default;
         ~Grid() = default;
 
@@ -36,6 +33,9 @@ namespace Crankhy{
 
         std::vector<EntityID> getNeighbors(EntityID entity);
 
+    private:
+        std::array<std::array<std::vector<EntityID>, height/cellSize>, width/cellSize> cells;
+        std::unordered_map<EntityID, EntityCollisionInfo> collisionInfo;
     };
 
 }

@@ -81,5 +81,7 @@ namespace Crankhy {
         void entityDestroyed(EntityID entity);
 
         void clearEntities();
+
+        void print();
     };
 }

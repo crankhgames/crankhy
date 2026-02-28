@@ -4,7 +4,7 @@
 // ECS utils
 
 const int COMPONENT_COUNT = 32;
-const int MAX_ENTITY_COUNT = 300;
+const int MAX_ENTITY_COUNT = 500;
 
 using EntityID = std::uint16_t;
 using ComponentBitset = std::bitset<COMPONENT_COUNT>;

@@ -29,17 +29,21 @@ namespace Crankhy{
                 AnimationRendererComponent &eAnimationRenderer = Game::get().getECS().getComponent<AnimationRendererComponent>(entity);
                 TextureRendererComponent &eTextureRenderer = Game::get().getECS().getComponent<TextureRendererComponent>(entity);
 
-                eAnimationRenderer.counter += deltaTime;
-                debug::log(eAnimationRenderer.currentFrame);
-                if (eAnimationRenderer.counter >= eAnimationRenderer.nextFrameCounter){
-                    eAnimationRenderer.counter = 0;
-                    eAnimationRenderer.currentFrame++;
+                //debug::log("Current frame of animation for entity ", entity, " is ", eAnimationRenderer.currentFrame);
+                AnimationState* state = eAnimationRenderer.animation->getCurrentState();
+                state->counter += deltaTime;
 
-                    if (eAnimationRenderer.currentFrame > eAnimationRenderer.endFrame){
-                        eAnimationRenderer.currentFrame = eAnimationRenderer.startFrame;
+                state->transition(state->manager, entity);
+
+                if (state->counter >= state->delayBtwFrames){
+                    state->counter = 0;
+                    state->frameCurrent++;
+
+                    if (state->frameCurrent > state->frameEnd){
+                        state->frameCurrent = state->frameStart;
                     }
 
-                    eTextureRenderer.sprite->changeSprite(eAnimationRenderer.currentFrame);
+                    eTextureRenderer.sprite->changeSprite(state->frameCurrent);
                 }
             }
         }

@@ -3,10 +3,13 @@
 #include "SDL2/SDL.h"
 #include "math/vector.h"
 #include "graphics/sprite.h"
+#include "animation/animation.h"
+#include "ecs/ecs.h"
 
 #include <variant>
 #include <memory>
 #include <string>
+#include <functional>
 
 namespace Crankhy{
 
@@ -43,16 +46,7 @@ namespace Crankhy{
     };
 
     struct AnimationRendererComponent{
-        
-        int startFrame;
-        int endFrame;
-        
-        float nextFrameCounter;
-
-        float counter = 0;
-        int currentFrame = 0;
-
-
+        AnimationManager* animation;
     };
 
 
@@ -73,6 +67,7 @@ namespace Crankhy{
     };
 
 
+#pragma region Collision Related Components
     enum class ColliderType{
         None,
         Rectangle,
@@ -93,7 +88,8 @@ namespace Crankhy{
         LAYER_NONE,
         LAYER_PLAYER,
         LAYER_BULLET,
-        LAYER_BLOCK
+        LAYER_BLOCK,
+        LAYER_ENEMY
     };
 
     struct ColliderComponent{
@@ -103,5 +99,22 @@ namespace Crankhy{
         bool hasPhysicalPresence=true;
         Vector offset;
         ShapeCollisionInfo shapeInfo;
+        std::vector<EntityID> collidedEntities;
     };
+
+#pragma endregion
+
+
+struct FollowBehaviourComponent{
+    TransformComponent* followedTransform;
+    float speed;
+};
+
+struct SpawnerComponent{
+    float delayBtwSpawns;
+    std::function<void(float, float, EntityID)> spawnFunc;
+    EntityID player;
+    float counter = 0.f;
+};
+
 }

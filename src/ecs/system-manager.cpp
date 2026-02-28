@@ -35,7 +35,7 @@ namespace Crankhy {
 
     void SystemManager::entityDestroyed(EntityID entity)
     {
-        for (auto system : systems)
+        for (auto& system : systems)
         {
             if (system->hasEntity(entity))
             {

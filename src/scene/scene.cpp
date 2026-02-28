@@ -9,7 +9,7 @@ namespace Crankhy{
 
         EntityID block = Game::get().getECS().createEntity();
 
-        float size = 1.0f;
+        float size = 0.5f;
 
         Game::get().getECS().addComponent(block, 
             TransformComponent{
@@ -24,7 +24,7 @@ namespace Crankhy{
             }
         );
 
-        Game::get().getECS().getComponent<TextureRendererComponent>(block).sprite->changeSprite(4);
+        Game::get().getECS().getComponent<TextureRendererComponent>(block).sprite->changeSprite(7);
 
         Game::get().getECS().addComponent<ColliderComponent>(block, 
             ColliderComponent {
@@ -38,6 +38,71 @@ namespace Crankhy{
             }
         );
     }
+
+    void spawnEnemy(float x, float y, EntityID player){
+
+        EntityID fuckingworm = Game::get().getECS().createEntity();
+
+        Game::get().getECS().addComponent(fuckingworm, 
+            TransformComponent{
+                .position = Vector(x, y),
+                .scale = Vector(2, 2)
+            }
+        );
+
+        
+        Game::get().getECS().addComponent(fuckingworm, 
+            TextureRendererComponent{
+                .sprite = new Spritesheet("assets/sprites/hollow-knight-sheet.png", 12, 10)
+            }
+        );
+
+
+        AnimationManager* fuckingWormAnimationManager = new AnimationManager();
+        AnimationState& walkState = fuckingWormAnimationManager->addState("Walk", 17, 23, .1f); 
+
+        walkState.transition = [](AnimationManager* animManager, EntityID entity) {
+        };
+
+        Game::get().getECS().addComponent(fuckingworm, 
+            AnimationRendererComponent{
+                .animation=fuckingWormAnimationManager
+            }
+        );
+        //Game::get().getECS().addComponent(fuckingworm, 
+            //AnimationRendererComponent{
+                //.startFrame=17,
+                //.endFrame=23,
+                //.nextFrameCounter=.1f,
+                //.currentFrame=17,
+            //}
+        //);
+
+        Game::get().getECS().addComponent(fuckingworm,
+            ColliderComponent{
+                .type=ColliderType::Circle,
+                .layer=CollisionLayer::LAYER_ENEMY,
+                .isStatic=false,
+                .hasPhysicalPresence=true,
+                .offset={.7f, 1.f},
+                .shapeInfo=CircleCollisionInfo{
+                    .radius=.5f
+                },
+            }
+        );
+
+        Game::get().getECS().addComponent(fuckingworm, 
+            VelocityComponent{
+            }
+        );
+
+        Game::get().getECS().addComponent(fuckingworm, 
+            FollowBehaviourComponent{
+                .followedTransform= &Game::get().getECS().getComponent<TransformComponent>(player),
+                .speed = 1.5f
+            }
+        );
+    }  
 
     void MainScene::initializeEntities() {
 
@@ -66,18 +131,28 @@ namespace Crankhy{
         //);
 
         for (int i = 0; i < 4; i++){
-            spawnBlock(i*2, 0);
-            spawnBlock(i*2, 5*2);
+            spawnBlock(i, 0);
+            spawnBlock(i, 5);
         }
 
         for (int i = 6; i < 10; i++){
-            spawnBlock(i*2, 0);
-            spawnBlock(i*2, 5*2);
+            spawnBlock(i, 0);
+            spawnBlock(i, 5);
         }
 
         for (int i = 0; i < 6; i++){
-            spawnBlock(-1*2, i*2);
-            spawnBlock(10*2, i*2);
+            spawnBlock(-1, i);
+            spawnBlock(10, i);
+        }
+
+
+        for (int i = -3; i < 9; i++){
+            spawnBlock(-4, i);
+            spawnBlock(13, i);
+        }
+        for (int i = -3; i < 13; i++){
+            spawnBlock(i, -3);
+            spawnBlock(i, 8);
         }
 
         EntityID player = Game::get().getECS().createEntity();
@@ -96,12 +171,27 @@ namespace Crankhy{
             }
         );
 
+        AnimationManager* playerAnimationManager = new AnimationManager();
+        AnimationState& walkState = playerAnimationManager->addState("Walk", 0, 8, .1f); 
+        AnimationState& idleState =  playerAnimationManager->addState("Idle", 66, 71, .4f); 
+
+        walkState.transition = [](AnimationManager* animManager, EntityID entity) {
+            VelocityComponent& velocity = Game::get().getECS().getComponent<VelocityComponent>(entity);
+            if (velocity.velocity.x == 0 && velocity.velocity.y == 0){
+                animManager->changeState("Idle");
+            }
+        };
+
+        idleState.transition = [](AnimationManager* animManager, EntityID entity) {
+            VelocityComponent& velocity = Game::get().getECS().getComponent<VelocityComponent>(entity);
+            if (velocity.velocity.x != 0 || velocity.velocity.y != 0){
+                animManager->changeState("Walk");
+            }
+        };
+
         Game::get().getECS().addComponent(player, 
             AnimationRendererComponent{
-                .startFrame=78,
-                .endFrame=83,
-                .nextFrameCounter=.1f,
-                .currentFrame=78,
+                .animation=playerAnimationManager
             }
         );
 
@@ -136,10 +226,39 @@ namespace Crankhy{
 
         Game::get().getECS().addComponent(player, 
             ShooterComponent{
-                .bulletSpeed=3.0f,
+                .bulletSpeed=5.0f,
                 .delayBtwShots=0.4f
             }
         );
+
+        // Following ent
+
+        //for (int i{1}; i < 7; i++){
+            //spawnEnemy(i + 2, -i, player);
+            //spawnEnemy(-i + 2, i, player);
+            //spawnEnemy(i + 2, i, player);
+            //spawnEnemy(-i + 2, -i, player);
+        //}
+
+        for (int i = 0; i <2; i++) {
+            EntityID spawner = Game::get().getECS().createEntity();
+            
+            Game::get().getECS().addComponent(spawner,
+                TransformComponent{
+                    .position = Vector(5 + 3*i, 4 + 1*i),
+                    .scale= Vector(0, 0)
+                }
+            );
+
+            Game::get().getECS().addComponent(spawner,
+                SpawnerComponent{
+                    .delayBtwSpawns=.3f,
+                    .spawnFunc = spawnEnemy,
+                    .player = player,
+                    .counter=1.f,
+                }
+            );
+        }
 
 
         EntityID camEntity = Game::get().getCamera();

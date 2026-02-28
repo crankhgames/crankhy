@@ -41,6 +41,9 @@ namespace Crankhy{
                     //debug::log("Scale: ", transform.scale.x, "; ", transform.scale.y);
                     //debug::log("Rendering sprite of ", entity);
                     SDL_Rect position = localToScreen(camTransform, camComponent, transform);
+
+                    //if (position.x + position.w < 0 || position.x > Game::get().getWindow().width || position.y > Game::get().getWindow().height || position.x + position.h < 0)
+                        //continue;
                     draw(renderer.sprite, position, renderer.flipX, renderer.flipY);
                 }
             }

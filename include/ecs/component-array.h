@@ -45,9 +45,22 @@ namespace Crankhy {
          * @param entity entity's id
          * @param component component of type T
          */
-        void addComponent(EntityID entity, T component)
+        void addComponent(EntityID entity, const T& component)
         {
             components[freeComponentID] = component;
+            component2Entity[freeComponentID] = entity;
+            entity2Component[entity] = freeComponentID;
+            freeComponentID++;
+        }
+
+        /**
+         * @brief Adds new component to this container based on entity's id
+         * @param entity entity's id
+         * @param component component of type T
+         */
+        void addComponent(EntityID entity, T&& component)
+        {
+            components[freeComponentID] = std::move(component);
             component2Entity[freeComponentID] = entity;
             entity2Component[entity] = freeComponentID;
             freeComponentID++;
@@ -61,7 +74,14 @@ namespace Crankhy {
         T &getComponent(EntityID entity)
         {
             // Checks if entity is present in entity pool
-            //debug::log("Finding component of type ", typeid(T).name(), "; ", entity);
+
+            //for (auto e = entity2Component.begin(); e<entity2Component.end(); e++){
+                //debug::log(e->first, "; ", e->second);
+            //}
+
+            //if (entity2Component.find(entity) != entity2Component.end()){
+                //debug::error(entity, " doesnt't exist at all mate !");
+            //}
             assert(entity2Component.find(entity) != entity2Component.end());
 
             ComponentID componentID = entity2Component[entity];

@@ -18,7 +18,7 @@ namespace Crankhy{
             return;
         }
 
-        renderer = SDL_CreateRenderer(window, -1, 0);
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (!renderer)
         {
             debug::error("Renderer not initialized...");
